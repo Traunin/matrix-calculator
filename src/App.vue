@@ -1,26 +1,47 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png">
-  <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <h1>Для определителя - квадратная и не расширенная</h1>
+    <div class="matrix1">
+        <matrix
+            :is-square="true"
+            :cols="10"
+            :rows="5"
+        ></matrix>
+    </div>
+
+    <h1>Для уравнений - квадратная и расширенная</h1>
+    <div class="matrix2">
+        <matrix
+            :is-square="true"
+            :cols="5"
+            :rows="5"
+            :is-augmented="true"
+        ></matrix>
+    </div>
+
+    <h1>Для умножения - не кваратная и имеет транспонированную</h1>
+    <div class="matrix3">
+        <matrix
+            :cols="5"
+            :rows="5"
+            :has-transponded="true"
+        ></matrix>
+    </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import Matrix from "./components/Matrix.vue";
 
 export default {
-  name: 'App',
-  components: {
-    HelloWorld
-  }
-}
+    components: {
+        Matrix,
+    },
+};
 </script>
 
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+<style scoped>
+.matrix1,
+.matrix2 {
+    margin-left: 50px;
+    margin-top: 50px;
 }
 </style>
