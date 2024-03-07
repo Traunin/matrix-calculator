@@ -4,8 +4,9 @@
             type="number"
             ref="input"
             @click="selectAllText"
-            value="0"
+            :value="0"
             :id="cellId"
+            @input = "$emit('update:modelValue', $event.target.value)"
         />
     </td>
 </template>
@@ -13,6 +14,7 @@
 <script>
 export default {
     props: ["rowIndex", "colIndex", "cellId"],
+    emits: ['update:modelValue'],
 
     methods: {
         selectAllText() {

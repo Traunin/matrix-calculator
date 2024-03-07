@@ -1,7 +1,7 @@
 <template>
     <h1>Рассчет определителя</h1>
     <matrix
-        :cols="3"
+        :cols="5"
         :rows="3"
         :is-square="true"
     ></matrix>

@@ -21,16 +21,29 @@
 
         <table>
             <tr>
-                <th v-for="colIndex in colCount + (isAugmented ? 1 : 0)">
-                    {{ colIndex <= colCount ? colIndex : "Доп." }}
+                <th v-for="colIndex in colCount">
+                    {{ colIndex }}
+                </th>
+
+                <th v-if = "isAugmented">
+                    Доп.
                 </th>
             </tr>
             <tr v-for="rowIndex in rowCount">
                 <matrix-cell
-                    v-for="colIndex in colCount + (isAugmented ? 1 : 0)"
+                    v-for="colIndex in colCount"
                     :col-index="colIndex"
                     :row-index="rowIndex"
-                    :cell-id="`${id}_${colIndex}_${rowIndex}`"
+                    :cell-id="`cell-${id}-${colIndex}-${rowIndex}`"
+                    @update:model-value = "val => values[rowIndex - 1][colIndex - 1] = val"
+                ></matrix-cell>
+
+                <matrix-cell
+                    v-if="isAugmented"
+                    :col-index="colCount + 1"
+                    :row-index="rowIndex"
+                    :cell-id="`cell-${id}-${colCount + 1}-${rowIndex}`"
+                    @update:model-value = "val => kVector[rowIndex - 1] = val"
                 ></matrix-cell>
             </tr>
         </table>
@@ -44,7 +57,7 @@
                     v-for="colIndex in rowCount"
                     :col-index="colIndex"
                     :row-index="rowIndex"
-                    :cell-id="`${id}_transponded_${colIndex}_${rowIndex}`"
+                    :cell-id="`cell-${id}-transponded-${colIndex}-${rowIndex}`"
                 ></matrix-cell>
             </tr>
         </table>
@@ -94,7 +107,15 @@ export default {
             rowCount: this.isSquare ? this.cols : this.rows,
             colCount: this.cols,
             id: this.uidGet(),
+            values: [],
+            kVector: []
         };
+    },
+
+    mounted() {
+        while (this.values.length < this.rowCount) {
+            this.values.push([])
+        }
     },
 
     computed: {
@@ -110,6 +131,9 @@ export default {
     methods: {
         addRow() {
             this.rowCount = Math.min(this.rowCount + 1, 100);
+            while (this.values.length < this.rowCount) {
+                this.values.push([])
+            }
         },
 
         removeRow() {
@@ -120,6 +144,9 @@ export default {
             this.colCount = Math.min(this.colCount + 1, 100);
             if (this.isSquare) {
                 this.rowCount = this.colCount;
+                while (this.values.length < this.rowCount) {
+                    this.values.push([])
+                }
             }
         },
 
@@ -129,6 +156,10 @@ export default {
                 this.rowCount = this.colCount;
             }
         },
+
+        test() {
+            console.log()
+        }
     },
 };
 </script>
