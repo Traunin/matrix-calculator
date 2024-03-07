@@ -79,7 +79,7 @@ export default {
         MatrixCell,
     },
 
-    mixins: [uidGenerator],
+    mixins: [uidGenerator, matrixCalculator],
 
     props: {
         cols: {
@@ -122,6 +122,8 @@ export default {
         while (this.values.length < this.rowCount) {
             this.values.push([]);
         }
+
+        this.$bus.$on("determinantNeeded", this.calculateDetetrminant)
     },
 
     computed: {
@@ -168,10 +170,13 @@ export default {
             for (let i = 0; i < this.rowCount; i++) {
                 trimmedArray[i] = [];
                 for (let j = 0; j < this.colCount; j++) {
-                    trimmedArray[i][j] = values[i][j];
+                    let tempVal = this.values[i][j];
+                    trimmedArray[i][j] = tempVal == null ? 0 : tempVal;
                 }
             }
-            this.calculateDetetrminantRecursively(trimmedArray);
+            
+            let determinant = this.calculateDetetrminantRecursively(trimmedArray);
+            this.$bus.$emit('determinantCalculated', determinant);
         },
     },
 };

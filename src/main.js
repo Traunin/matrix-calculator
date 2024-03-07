@@ -3,6 +3,7 @@ import App from "./App.vue";
 import "reset-css";
 import "@/assets/style/style.css";
 import router from "./routes";
+import $bus from "./utils/Events";
 
 const app = createApp(App);
 
