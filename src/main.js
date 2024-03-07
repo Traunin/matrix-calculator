@@ -8,4 +8,6 @@ const app = createApp(App);
 
 app.use(router);
 
+app.config.globalProperties.$bus = $bus;
+
 app.mount("#app");

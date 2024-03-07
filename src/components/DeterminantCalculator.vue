@@ -5,6 +5,10 @@
         :rows="3"
         :is-square="true"
     ></matrix>
+
+    <button
+        @click = "$emit('')"
+    ></button>
 </template>
 
 <script>

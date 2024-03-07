@@ -28,6 +28,10 @@ nav a {
     text-align: center;
 }
 
+nav li {
+    margin: 0 10px;
+}
+
 a::after {
     content: "";
     width: 0;

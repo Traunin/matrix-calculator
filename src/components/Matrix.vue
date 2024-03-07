@@ -25,9 +25,7 @@
                     {{ colIndex }}
                 </th>
 
-                <th v-if = "isAugmented">
-                    Доп.
-                </th>
+                <th v-if="isAugmented">Доп.</th>
             </tr>
             <tr v-for="rowIndex in rowCount">
                 <matrix-cell
@@ -35,7 +33,9 @@
                     :col-index="colIndex"
                     :row-index="rowIndex"
                     :cell-id="`cell-${id}-${colIndex}-${rowIndex}`"
-                    @update:model-value = "val => values[rowIndex - 1][colIndex - 1] = val"
+                    @update:model-value="
+                        (val) => (values[rowIndex - 1][colIndex - 1] = val)
+                    "
                 ></matrix-cell>
 
                 <matrix-cell
@@ -43,30 +43,36 @@
                     :col-index="colCount + 1"
                     :row-index="rowIndex"
                     :cell-id="`cell-${id}-${colCount + 1}-${rowIndex}`"
-                    @update:model-value = "val => kVector[rowIndex - 1] = val"
+                    @update:model-value="(val) => (kVector[rowIndex - 1] = val)"
                 ></matrix-cell>
             </tr>
         </table>
 
-        <table v-if="hasTransponded">
-            <tr>
-                <th v-for="colIndex in rowCount">{{ colIndex }}</th>
-            </tr>
-            <tr v-for="rowIndex in colCount">
-                <matrix-cell
-                    v-for="colIndex in rowCount"
-                    :col-index="colIndex"
-                    :row-index="rowIndex"
-                    :cell-id="`cell-${id}-transponded-${colIndex}-${rowIndex}`"
-                ></matrix-cell>
-            </tr>
-        </table>
+        <div
+            class="compatible"
+            v-if="hasCompatible"
+        >
+            <table>
+                <tr>
+                    <th v-for="colIndex in rowCount">{{ colIndex }}</th>
+                </tr>
+                <tr v-for="rowIndex in colCount">
+                    <matrix-cell
+                        v-for="colIndex in rowCount"
+                        :col-index="colIndex"
+                        :row-index="rowIndex"
+                        :cell-id="`cell-${id}-compatible-${colIndex}-${rowIndex}`"
+                    ></matrix-cell>
+                </tr>
+            </table>
+        </div>
     </div>
 </template>
 
 <script>
 import MatrixCell from "./MatrixCell.vue";
 import uidGenerator from "./uidGenerator";
+import matrixCalculator from "./matrixCalculator";
 
 export default {
     components: {
@@ -96,7 +102,7 @@ export default {
             default: false,
         },
 
-        hasTransponded: {
+        hasCompatible: {
             type: Boolean,
             default: false,
         },
@@ -108,13 +114,13 @@ export default {
             colCount: this.cols,
             id: this.uidGet(),
             values: [],
-            kVector: []
+            kVector: [],
         };
     },
 
     mounted() {
         while (this.values.length < this.rowCount) {
-            this.values.push([])
+            this.values.push([]);
         }
     },
 
@@ -132,12 +138,12 @@ export default {
         addRow() {
             this.rowCount = Math.min(this.rowCount + 1, 100);
             while (this.values.length < this.rowCount) {
-                this.values.push([])
+                this.values.push([]);
             }
         },
 
         removeRow() {
-            this.rowCount = Math.max(this.rowCount - 1, 0);
+            this.rowCount = Math.max(this.rowCount - 1, 1);
         },
 
         addCol() {
@@ -145,21 +151,28 @@ export default {
             if (this.isSquare) {
                 this.rowCount = this.colCount;
                 while (this.values.length < this.rowCount) {
-                    this.values.push([])
+                    this.values.push([]);
                 }
             }
         },
 
         removeCol() {
-            this.colCount = Math.max(this.colCount - 1, 0);
+            this.colCount = Math.max(this.colCount - 1, 1);
             if (this.isSquare) {
                 this.rowCount = this.colCount;
             }
         },
 
-        test() {
-            console.log()
-        }
+        calculateDetetrminant() {
+            let trimmedArray = [];
+            for (let i = 0; i < this.rowCount; i++) {
+                trimmedArray[i] = [];
+                for (let j = 0; j < this.colCount; j++) {
+                    trimmedArray[i][j] = values[i][j];
+                }
+            }
+            this.calculateDetetrminantRecursively(trimmedArray);
+        },
     },
 };
 </script>

@@ -1,10 +1,9 @@
 <template>
     <h1>Умножение матриц</h1>
     <matrix
-        :cols="3"
+        :cols="4"
         :rows="3"
-        :is-square="true"
-        :is-augmented="true"
+        :has-compatible="true"
     ></matrix>
 </template>
 
