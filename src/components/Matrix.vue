@@ -21,6 +21,7 @@
 
         <table>
             <tr>
+                <th>{{ colCount }}x{{ rowCount }}</th>
                 <th v-for="colIndex in colCount">
                     {{ colIndex }}
                 </th>
@@ -28,6 +29,7 @@
                 <th v-if="isAugmented">Доп.</th>
             </tr>
             <tr v-for="rowIndex in rowCount">
+                <td>{{ rowIndex }}</td>
                 <matrix-cell
                     v-for="colIndex in colCount"
                     :col-index="colIndex"
@@ -248,8 +250,8 @@ button:hover {
     left: -30px;
 }
 
-table {
-    border: 1px solid #000;
+td {
+    text-align: center;
 }
 
 th {
