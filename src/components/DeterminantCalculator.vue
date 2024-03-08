@@ -1,5 +1,4 @@
 <template>
-    <h1>Рассчет определителя</h1>
     <button @click="$bus.$emit('determinantNeeded')">Найти определитель</button>
     <div class="result">Определитель: {{ determinant }}</div>
     <matrix

@@ -17,6 +17,9 @@
                 {{ colCount }}
             </div>
             <button @click.prevent="addCol">+</button>
+            <div class="col-count-caption">
+                {{ isSquare ? "Порядок" : "Число столбцов" }}
+            </div>
         </div>
 
         <table>
@@ -125,7 +128,7 @@ export default {
             this.values.push([]);
         }
 
-        this.$bus.$on("determinantNeeded", this.calculateDetetrminant)
+        this.$bus.$on("determinantNeeded", this.calculateDetetrminant);
     },
 
     computed: {
@@ -176,9 +179,10 @@ export default {
                     trimmedArray[i][j] = tempVal == null ? 0 : tempVal;
                 }
             }
-            
-            let determinant = this.calculateDetetrminantRecursively(trimmedArray);
-            this.$bus.$emit('determinantCalculated', determinant);
+
+            let determinant =
+                this.calculateDetetrminantRecursively(trimmedArray);
+            this.$bus.$emit("determinantCalculated", determinant);
         },
     },
 };
@@ -200,7 +204,7 @@ export default {
 }
 
 .col-controller .col-count {
-    margin: 0 5px;
+    margin: 0 10px;
 }
 
 .is-augmented-checkbox {
@@ -254,8 +258,16 @@ td {
     text-align: center;
 }
 
+td:first-child {
+    padding: 0 15px;
+}
+
 th {
     height: 25px;
     line-height: 25px;
+}
+
+.col-count-caption {
+    margin-left: 10px;
 }
 </style>

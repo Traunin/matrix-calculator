@@ -1,5 +1,4 @@
 <template>
-    <h1>Умножение матриц</h1>
     <matrix
         :cols="4"
         :rows="3"
