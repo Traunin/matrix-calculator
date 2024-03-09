@@ -1,11 +1,17 @@
 <template>
-    <button @click="$bus.$emit('determinantNeeded')">Найти определитель</button>
-    <div class="result">Определитель: {{ determinant }}</div>
-    <matrix
-        :cols="5"
-        :rows="3"
-        :is-square="true"
-    ></matrix>
+    <div class="calculator">
+        <div class="determinant">
+            <button @click="$bus.$emit('determinantNeeded')">
+                Найти определитель
+            </button>
+            <div class="result">Определитель: {{ determinant }}</div>
+        </div>
+        <matrix
+            :cols="5"
+            :rows="3"
+            :is-square="true"
+        ></matrix>
+    </div>
 </template>
 
 <script>
@@ -38,25 +44,32 @@ export default {
 
 <style scoped>
 button {
-    margin: 10px 30px;
+    margin: 10px 20px;
     padding: 5px;
     font-size: 1em;
     display: inline-block;
-    background-color: #4BBF44;
+    background-color: #4bbf44;
     color: black;
     border-radius: 5px;
-    border: 3px solid #4BBF44;
+    border: 3px solid #4bbf44;
     transition: all 0.1s;
     cursor: pointer;
 }
 
 button:hover {
-    border-color:#94DADA
+    border-color: #94dada;
 }
 
 .result {
     display: inline-block;
     font-size: 1em;
-    font-family: 'Roboto', sans-serif;
+    font-family: "Roboto", sans-serif;
+}
+
+.calculator {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
 </style>

@@ -1,40 +1,47 @@
 <template>
     <div class="matrix">
-        <div
-            class="row-controller"
-            v-if="!isSquare"
-        >
-            <button @click.prevent="removeRow">-</button>
-            <div class="row-count">
-                {{ rowCount }}
+        <div class="size-controller">
+            <div
+                class="row-controller"
+                v-if="!isSquare"
+            >
+                <div class="row-count-caption">Ряды</div>
+                <button @click.prevent="removeRow">-</button>
+                <input
+                    v-model="inputRowCount"
+                    @blur="updateDisplayedRowCount"
+                />
+                <button @click.prevent="addRow">+</button>
             </div>
-            <button @click.prevent="addRow">+</button>
-        </div>
 
-        <div class="col-controller">
-            <button @click.prevent="removeCol">-</button>
-            <div class="col-count">
-                {{ colCount }}
-            </div>
-            <button @click.prevent="addCol">+</button>
-            <div class="col-count-caption">
-                {{ isSquare ? "Порядок" : "Число столбцов" }}
+            <div class="col-controller">
+                <div class="col-count-caption">
+                    {{ isSquare ? "Порядок" : "Столбцы" }}
+                </div>
+                <button @click.prevent="removeCol">-</button>
+                <input
+                    v-model="inputColCount"
+                    @blur="updateDisplayedColCount"
+                />
+                <button @click.prevent="addCol">+</button>
             </div>
         </div>
 
         <table>
             <tr>
-                <th>{{ colCount }}x{{ rowCount }}</th>
-                <th v-for="colIndex in colCount">
+                <th style="text-wrap: nowrap">
+                    {{ colCount }} x {{ rowCount }}
+                </th>
+                <th v-for="colIndex in nanAdustedColCount">
                     {{ colIndex }}
                 </th>
 
                 <th v-if="isAugmented">Доп.</th>
             </tr>
-            <tr v-for="rowIndex in rowCount">
+            <tr v-for="rowIndex in nanAdustedRowCount">
                 <td>{{ rowIndex }}</td>
                 <matrix-cell
-                    v-for="colIndex in colCount"
+                    v-for="colIndex in nanAdustedColCount"
                     :col-index="colIndex"
                     :row-index="rowIndex"
                     :cell-id="`cell-${id}-${colIndex}-${rowIndex}`"
@@ -52,25 +59,6 @@
                 ></matrix-cell>
             </tr>
         </table>
-
-        <div
-            class="compatible"
-            v-if="hasCompatible"
-        >
-            <table>
-                <tr>
-                    <th v-for="colIndex in rowCount">{{ colIndex }}</th>
-                </tr>
-                <tr v-for="rowIndex in colCount">
-                    <matrix-cell
-                        v-for="colIndex in rowCount"
-                        :col-index="colIndex"
-                        :row-index="rowIndex"
-                        :cell-id="`cell-${id}-compatible-${colIndex}-${rowIndex}`"
-                    ></matrix-cell>
-                </tr>
-            </table>
-        </div>
     </div>
 </template>
 
@@ -117,6 +105,8 @@ export default {
         return {
             rowCount: this.isSquare ? this.cols : this.rows,
             colCount: this.cols,
+            inputRowCount: this.isSquare ? this.cols : this.rows,
+            inputColCount: this.cols,
             id: this.uidGet(),
             values: [],
             kVector: [],
@@ -139,9 +129,45 @@ export default {
         colCountAdjustedForSquareness() {
             return this.isSquare ? this.colCount : this.rowCount;
         },
+
+        nanAdustedColCount() {
+            return isNaN(this.colCount) ? 1 : this.colCount;
+        },
+
+        nanAdustedRowCount() {
+            return isNaN(this.rowCount) ? 1 : this.rowCount;
+        },
+    },
+
+    watch: {
+        inputRowCount(val, oldVal) {
+            let newRowCount = Math.min(Math.max(parseInt(val), 1), 100);
+            this.rowCount = isNaN(newRowCount) ? 1 : newRowCount;
+        },
+
+        inputColCount(val, oldVal) {
+            let newColCount = Math.min(Math.max(parseInt(val), 1), 100);
+            this.colCount = isNaN(newColCount) ? 1 : newColCount;
+        },
+
+        colCount(val, oldVal) {
+            this.inputColCount = val;
+        },
+
+        rowCount(val, oldVal) {
+            this.inputRowCount = val;
+        },
     },
 
     methods: {
+        updateDisplayedRowCount() {
+            this.inputRowCount = this.rowCount;
+        },
+
+        updateDisplayedColCount() {
+            this.inputColCount = this.colCount;
+        },
+
         addRow() {
             this.rowCount = Math.min(this.rowCount + 1, 100);
             while (this.values.length < this.rowCount) {
@@ -190,68 +216,10 @@ export default {
 
 <style scoped>
 .matrix {
-    margin-top: 30px;
-    margin-left: 30px;
-    position: relative;
     font-family: "Roboto", sans-serif;
-}
-
-.col-controller {
-    display: flex;
-    align-items: center;
-    position: absolute;
-    top: -30px;
-}
-
-.col-controller .col-count {
-    margin: 0 10px;
-}
-
-.is-augmented-checkbox {
-    position: absolute;
-    top: -30px;
-    font-size: 14px;
-    left: 100px;
-    display: flex;
-    align-items: center;
-}
-
-.is-augmented-checkbox input {
-    width: 25px;
-    height: 25px;
-    margin: 0;
-    margin-right: 5px;
-}
-
-.is-augmented-checkbox label {
-    width: 25px;
-    font-size: 12.5px;
-}
-
-button {
-    font-size: 15px;
-    width: 25px;
-    height: 25px;
-    border-radius: 5px;
-    border: none;
-    background-color: #2f27ce;
-    color: #fff;
-    text-align: center;
-    cursor: pointer;
-}
-
-button:hover {
-    border: 2px solid #dedcff;
-}
-
-.row-controller {
-    display: flex;
+    display: inline-flex;
     flex-direction: column;
-    align-items: center;
-    width: 25px;
-    position: absolute;
-    top: 0px;
-    left: -30px;
+    justify-content: center;
 }
 
 td {
@@ -267,7 +235,48 @@ th {
     line-height: 25px;
 }
 
+button {
+    font-size: 15px;
+    width: 25px;
+    height: 25px;
+    border-radius: 5px;
+    border: none;
+    background-color: #4bbf44;
+    text-align: center;
+    cursor: pointer;
+}
+
+button:hover {
+    border: 2px solid #dedcff;
+}
+
+.size-controller {
+    display: flex;
+    justify-content: center;
+}
+
+.size-controller input {
+    width: 50px;
+    text-align: center;
+}
+
+.row-count-caption,
 .col-count-caption {
-    margin-left: 10px;
+    text-align: center;
+}
+
+.size-controller input {
+    height: 25px;
+    padding: 0;
+    padding-block: 0;
+    padding-inline: 0;
+    border: 1px solid #000;
+    box-sizing: border-box;
+    margin: 0 10px;
+}
+
+.col-controller,
+.row-controller {
+    margin: 0 5px;
 }
 </style>
