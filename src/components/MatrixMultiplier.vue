@@ -5,6 +5,12 @@
             :rows="3"
             :has-compatible="true"
         ></matrix>
+
+        <matrix
+            :cols="4"
+            :rows="3"
+            :has-compatible="true"
+        ></matrix>
     </div>
 </template>
 
