@@ -1,14 +1,28 @@
 <template>
     <div class="calculator">
-        <div class="determinant">
-            <button @click="$bus.$emit('determinantNeeded')">
-                Найти корни системы уравнений
-            </button>
-            <div class="result">Определитель: {{ determinant }}</div>
+        <button @click="$bus.$emit('solutionNeeded')">
+            Найти корни системы уравнений
+        </button>
+        <div
+            class="result"
+            v-if="determinant == 0"
+        >
+            Определитель равен нулю!
+        </div>
+        <div
+            class="solutions"
+            v-if="determinant != 0"
+        >
+            <div
+                class="solution"
+                v-for="(root, index) in solutions"
+            >
+                x<sub>{{ index + 1 }}</sub> = {{ root }}
+            </div>
         </div>
 
         <matrix
-            :cols="5"
+            :cols="3"
             :rows="3"
             :is-square="true"
             :is-augmented="true"
@@ -25,14 +39,17 @@ export default {
     },
 
     mounted() {
-        this.$bus.$on("determinantCalculated", (determinant) =>
-            this.outputDetetrminant(determinant)
-        );
+        this.$bus.$on("solutionsFound", (solutions) => {
+            console.log(solutions);
+            this.solutions = solutions.solutions;
+            this.determinant = solutions.determinant;
+        });
     },
 
     data() {
         return {
             determinant: 0,
+            solutions: [],
         };
     },
 
@@ -66,6 +83,8 @@ button:hover {
     display: inline-block;
     font-size: 1em;
     font-family: "Roboto", sans-serif;
+    color: red;
+    margin-bottom: 10px;
 }
 
 .calculator {
@@ -73,5 +92,21 @@ button:hover {
     flex-direction: column;
     justify-content: center;
     align-items: center;
+}
+
+.solutions {
+    margin-bottom: 6px;
+    font-size: 1em;
+    font-family: "Roboto", sans-serif;
+    display: flex;
+    flex-direction: row;
+}
+
+.solution {
+    margin: 0 5px;
+}
+
+sub {
+    vertical-align: sub;
 }
 </style>
