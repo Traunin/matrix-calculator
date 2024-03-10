@@ -30,7 +30,7 @@
         <table>
             <tr>
                 <th style="text-wrap: nowrap">
-                    {{ colCount }} x {{ rowCount }}
+                    {{ rowCount }} x {{ colCount }}
                 </th>
                 <th v-for="colIndex in nanAdustedColCount">
                     {{ colIndex }}
@@ -46,7 +46,7 @@
                     :row-index="rowIndex"
                     :cell-id="`cell-${id}-${colIndex}-${rowIndex}`"
                     @update:model-value="
-                        (val) => (values[rowIndex - 1][colIndex - 1] = val)
+                        (val) => (values[rowIndex - 1][colIndex - 1] = parseFloat(val))
                     "
                 ></matrix-cell>
 
@@ -55,7 +55,7 @@
                     :col-index="colCount + 1"
                     :row-index="rowIndex"
                     :cell-id="`cell-${id}-${colCount + 1}-${rowIndex}`"
-                    @update:model-value="(val) => (kVector[rowIndex - 1] = val)"
+                    @update:model-value="(val) => (kVector[rowIndex - 1] = parseFloat(val))"
                 ></matrix-cell>
             </tr>
         </table>
@@ -118,7 +118,12 @@ export default {
             this.values.push([]);
         }
 
+        while (this.kVector.length < this.rowCount) {
+            this.kVector.push(0);
+        }
+
         this.$bus.$on("determinantNeeded", this.calculateDetetrminant);
+        this.$bus.$on("solutionNeeded", this.findSolution);
     },
 
     computed: {
@@ -210,6 +215,23 @@ export default {
                 this.calculateDetetrminantRecursively(trimmedArray);
             this.$bus.$emit("determinantCalculated", determinant);
         },
+
+        findSolution() {
+            let trimmedArray = [];
+            let trimmedKVector = []
+            for (let i = 0; i < this.rowCount; i++) {
+                trimmedArray[i] = [];
+                trimmedKVector[i] = this.kVector[i]
+                for (let j = 0; j < this.colCount; j++) {
+                    let tempVal = this.values[i][j];
+                    trimmedArray[i][j] = tempVal == null ? 0 : tempVal;
+                }
+            }
+
+            let solutions =
+                this.calculateSolutionsWithKrammer(trimmedArray, trimmedKVector);
+            this.$bus.$emit("solutionsFound", solutions);
+        },
     },
 };
 </script>
@@ -253,6 +275,7 @@ button:hover {
 .size-controller {
     display: flex;
     justify-content: center;
+    margin-bottom: 10px;
 }
 
 .size-controller input {
@@ -263,6 +286,7 @@ button:hover {
 .row-count-caption,
 .col-count-caption {
     text-align: center;
+    margin-bottom: 5px;
 }
 
 .size-controller input {
