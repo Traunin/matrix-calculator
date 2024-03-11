@@ -1,6 +1,9 @@
 <template>
     <div class="matrix">
-        <div class="size-controller">
+        <div
+            class="size-controller"
+            v-if="userResizable"
+        >
             <div
                 class="row-controller"
                 v-if="!isSquare"
@@ -29,24 +32,32 @@
 
         <table>
             <tr>
-                <th style="text-wrap: nowrap">
+                <th
+                    style="text-wrap: nowrap"
+                    width="55"
+                >
                     {{ rowCount }} x {{ colCount }}
                 </th>
-                <th v-for="colIndex in nanAdustedColCount">
+                <th
+                    v-for="colIndex in nanAdustedColCount"
+                    width="55"
+                >
                     {{ colIndex }}
                 </th>
 
                 <th v-if="isAugmented">Доп.</th>
             </tr>
             <tr v-for="rowIndex in nanAdustedRowCount">
-                <td>{{ rowIndex }}</td>
+                <td width="45">{{ rowIndex }}</td>
                 <matrix-cell
                     v-for="colIndex in nanAdustedColCount"
                     :col-index="colIndex"
                     :row-index="rowIndex"
-                    :cell-id="`cell-${id}-${colIndex}-${rowIndex}`"
+                    :matrix-id="id"
                     @update:model-value="
-                        (val) => (values[rowIndex - 1][colIndex - 1] = parseFloat(val))
+                        (val) =>
+                            (values[rowIndex - 1][colIndex - 1] =
+                                parseFloat(val))
                     "
                 ></matrix-cell>
 
@@ -55,7 +66,9 @@
                     :col-index="colCount + 1"
                     :row-index="rowIndex"
                     :cell-id="`cell-${id}-${colCount + 1}-${rowIndex}`"
-                    @update:model-value="(val) => (kVector[rowIndex - 1] = parseFloat(val))"
+                    @update:model-value="
+                        (val) => (kVector[rowIndex - 1] = parseFloat(val))
+                    "
                 ></matrix-cell>
             </tr>
         </table>
@@ -95,9 +108,24 @@ export default {
             default: false,
         },
 
-        hasCompatible: {
+        uid: {
+            type: Number,
+            default: -1,
+        },
+
+        userResizable: {
             type: Boolean,
-            default: false,
+            default: true,
+        },
+
+        linkedRowUid: {
+            type: Number,
+            default: -1,
+        },
+
+        linkedColUid: {
+            type: Number,
+            default: -1,
         },
     },
 
@@ -107,11 +135,12 @@ export default {
             colCount: this.cols,
             inputRowCount: this.isSquare ? this.cols : this.rows,
             inputColCount: this.cols,
-            id: this.uidGet(),
-            values: [],
+            id: this.uid == -1 ? this.uidGet() : this.uid, //Get()
+            values: [[]],
             kVector: [],
         };
     },
+
 
     mounted() {
         while (this.values.length < this.rowCount) {
@@ -124,6 +153,63 @@ export default {
 
         this.$bus.$on("determinantNeeded", this.calculateDetetrminant);
         this.$bus.$on("solutionNeeded", this.findSolution);
+
+        // needed only for matrix multiplication and compatible matrices
+        if (this.linkedColUid != -1 && this.linkedRowUid != -1) {
+            this.$bus.$on("colsChanged" + this.linkedColUid, (newColCount) => {
+                this.colCount = newColCount;
+            });
+            this.$bus.$on("rowsChanged" + this.linkedRowUid, (newColCount) => {
+                this.rowCount = newColCount;
+            });
+            this.$bus.$on("matricesMultiplied", (product) => {
+                this.$bus.$emit("writeValues" + this.id, product);
+            });
+        } else if (this.linkedColUid != -1) {
+            this.$bus.$on("colsChanged" + this.linkedColUid, (newColCount) => {
+                this.rowCount = newColCount;
+            });
+
+            this.$bus.$on("secondPayloadNeeded", (payload) => {
+                
+                let trimmedArray = [];
+                for (let i = 0; i < this.rowCount; i++) {
+                    trimmedArray[i] = [];
+                    for (let j = 0; j < this.colCount; j++) {
+                        let tempVal
+                        if (i < this.values.length) {
+                            tempVal = this.values[i][j];
+                        }
+                         
+                        trimmedArray[i][j] = tempVal == null ? 0 : tempVal;
+                    }
+                }
+
+                let product = this.multiplyMatrices(trimmedArray, payload);
+                this.$bus.$emit("matricesMultiplied", product);
+            });
+        } else if (this.linkedRowUid != -1) {
+            this.$bus.$on("rowsChanged" + this.linkedRowUid, (newColCount) => {
+                this.colCount = newColCount;
+            });
+
+            this.$bus.$on("multiplicationNeeded", () => {
+                let trimmedArray = [];
+                for (let i = 0; i < this.rowCount; i++) {
+                    trimmedArray[i] = [];
+                    for (let j = 0; j < this.colCount; j++) {
+                        let tempVal
+                        if (i < this.values.length) {
+                            tempVal = this.values[i][j];
+                        }
+                         
+                        trimmedArray[i][j] = tempVal == null ? 0 : tempVal;
+                    }
+                }
+                
+                this.$bus.$emit("secondPayloadNeeded", trimmedArray);
+            });
+        }
     },
 
     computed: {
@@ -157,10 +243,15 @@ export default {
 
         colCount(val, oldVal) {
             this.inputColCount = val;
+            this.$bus.$emit("colsChanged" + this.id, val);
         },
 
         rowCount(val, oldVal) {
+            while (this.values.length < this.rowCount) {
+                this.values.push([]);
+            }
             this.inputRowCount = val;
+            this.$bus.$emit("rowsChanged" + this.id, val);
         },
     },
 
@@ -218,18 +309,20 @@ export default {
 
         findSolution() {
             let trimmedArray = [];
-            let trimmedKVector = []
+            let trimmedKVector = [];
             for (let i = 0; i < this.rowCount; i++) {
                 trimmedArray[i] = [];
-                trimmedKVector[i] = this.kVector[i]
+                trimmedKVector[i] = this.kVector[i];
                 for (let j = 0; j < this.colCount; j++) {
                     let tempVal = this.values[i][j];
                     trimmedArray[i][j] = tempVal == null ? 0 : tempVal;
                 }
             }
 
-            let solutions =
-                this.calculateSolutionsWithKrammer(trimmedArray, trimmedKVector);
+            let solutions = this.calculateSolutionsWithKrammer(
+                trimmedArray,
+                trimmedKVector
+            );
             this.$bus.$emit("solutionsFound", solutions);
         },
     },
@@ -249,7 +342,7 @@ td {
 }
 
 td:first-child {
-    padding: 0 15px;
+    padding: 0 0px;
 }
 
 th {

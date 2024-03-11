@@ -1,20 +1,49 @@
 <template>
-    <td>
+    <td width="55">
         <input
             type="number"
             ref="input"
             @click="selectAllText"
-            :value="0"
-            :id="cellId"
-            @input = "$emit('update:modelValue', $event.target.value)"
+            :value="value"
+            :id="`cell-${matrixId}-${colIndex}-${rowIndex}`"
+            @input="$emit('update:modelValue', $event.target.value)"
         />
     </td>
 </template>
 
 <script>
 export default {
-    props: ["rowIndex", "colIndex", "cellId"],
-    emits: ['update:modelValue'],
+    props: {
+        rowIndex: {
+            type: Number,
+        },
+
+        colIndex: {
+            type: Number,
+        },
+        matrixId: {
+            type: Number,
+        },
+        initValue: {
+            default: 0,
+        },
+    },
+
+    data() {
+        return {
+            value: this.initValue,
+        };
+    },
+
+    emits: ["update:modelValue"],
+
+    created() {
+        this.$bus.$on("writeValues" + this.matrixId, (product) => {
+            if (this.rowIndex - 1 < product.length && this.colIndex - 1 < product[0].length) {
+                this.value = product[this.rowIndex-1][this.colIndex-1];
+            }
+        });
+    },
 
     methods: {
         selectAllText() {
@@ -43,7 +72,7 @@ td {
 }
 
 input {
-    width: 45px;
+    width: 55px;
     height: 27px;
     outline: none;
     text-align: center;

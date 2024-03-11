@@ -98,5 +98,35 @@ export default {
             result.solutions = solutions;
             return result;
         },
+
+        multiplyMatrices(matrix1, matrix2) {
+            let product = [];
+            // Determine dimensions of matrices
+            let complementSquareSize = matrix1.length;
+            let productColCount = matrix1[0].length;
+            let productRowCount = matrix2.length;
+
+            console.table(matrix1)
+            console.table(matrix2)
+        
+            // Initialize product matrix with zeros
+            for (let i = 0; i < productRowCount; i++) {
+                product[i] = [];
+                for (let j = 0; j < productColCount; j++) {
+                    product[i][j] = 0;
+                }
+            }
+        
+            // multiply
+            for (let i = 0; i < productRowCount; i++) { //row
+                for (let j = 0; j < productColCount; j++) { //col
+                    for (let k = 0; k < complementSquareSize; k++) {
+                        product[i][j] += matrix1[k][j] * matrix2[i][k];
+                    }
+                }
+            }
+
+            return product;
+        }
     },
 };
