@@ -8,7 +8,7 @@
                 class="row-controller"
                 v-if="!isSquare"
             >
-                <div class="row-count-caption">Ряды</div>
+                <div class="row-count-caption">Строки</div>
                 <button @click.prevent="removeRow">-</button>
                 <input
                     v-model="inputRowCount"
