@@ -9,7 +9,12 @@
             >
                 Найти определитель
             </button>
-            <div class="result" v-if = "determinantCalculated">Δ = {{ matrix.determinant }}</div>
+            <div
+                class="result"
+                v-if="determinantCalculated"
+            >
+                Δ = {{ matrix.determinant }}
+            </div>
         </div>
 
         <matrix-editor
@@ -30,7 +35,7 @@ export default {
 
     data() {
         return {
-            matrix: new Matrix(3, 3, true, false),
+            matrix: new Matrix(4, 4, true, false),
             determinantCalculated: false,
         };
     },
