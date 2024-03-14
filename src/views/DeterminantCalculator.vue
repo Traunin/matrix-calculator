@@ -4,7 +4,7 @@
             <button
                 @click.prevent="
                     determinantCalculated = true;
-                    matrix.calculateDetetrminantRecursively();
+                    determinant = matrix.calculateDetetrminantRecursively();
                 "
             >
                 Найти определитель
@@ -13,7 +13,7 @@
                 class="result"
                 v-if="determinantCalculated"
             >
-                Δ = {{ matrix.determinant }}
+                Δ = {{ determinant }}
             </div>
         </div>
 
@@ -37,6 +37,7 @@ export default {
         return {
             matrix: new Matrix(4, 4, true, false),
             determinantCalculated: false,
+            determinant: 0,
         };
     },
 };
