@@ -1,12 +1,11 @@
 <template>
-    <td width="55">
+    <td>
         <input
             type="number"
             ref="input"
-            @click="selectAllText"
             :value="value"
             :id="`cell-${matrixId}-${colIndex}-${rowIndex}`"
-            @input="$emit('update:modelValue', $event.target.value)"
+            @click="selectAllText"
         />
     </td>
 </template>
@@ -21,28 +20,14 @@ export default {
         colIndex: {
             type: Number,
         },
+
         matrixId: {
             type: Number,
         },
-        initValue: {
+
+        value: {
             default: 0,
         },
-    },
-
-    data() {
-        return {
-            value: this.initValue,
-        };
-    },
-
-    emits: ["update:modelValue"],
-
-    created() {
-        this.$bus.$on("writeValues" + this.matrixId, (product) => {
-            if (this.rowIndex - 1 < product.length && this.colIndex - 1 < product[0].length) {
-                this.value = product[this.rowIndex-1][this.colIndex-1];
-            }
-        });
     },
 
     methods: {
