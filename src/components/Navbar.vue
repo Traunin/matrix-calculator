@@ -14,7 +14,7 @@
 </template>
 
 <script>
-import NavbarLink from './NavbarLink.vue';
+import NavbarLink from '@/components/NavbarLink.vue';
 
 export default {
     components: {
@@ -25,9 +25,7 @@ export default {
         return {
             activePage: 0,
             pages: [
-                {name: "Рассчёт определителя", link: "determinant"},
-                {name: "Нахождение корней сисетмы", link: "roots"},
-                {name: "Умножение матриц", link: "multiply"},
+                {name: "Рассчет определителя рекурсией", link: "determinant"}
             ]
         }
     }
