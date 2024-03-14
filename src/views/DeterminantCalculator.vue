@@ -1,0 +1,70 @@
+<template>
+    <div class="calculator">
+        <div class="determinant">
+            <button
+                @click.prevent="
+                    determinantCalculated = true;
+                    matrix.calculateDetetrminantRecursively();
+                "
+            >
+                Найти определитель
+            </button>
+            <div class="result" v-if = "determinantCalculated">Δ = {{ matrix.determinant }}</div>
+        </div>
+
+        <matrix-editor
+            @update="determinantCalculated = false"
+            :matrix="matrix"
+        ></matrix-editor>
+    </div>
+</template>
+
+<script>
+import MatrixEditor from "@/components/MatrixEditor.vue";
+import Matrix from "@/utils/matrix";
+
+export default {
+    components: {
+        MatrixEditor,
+    },
+
+    data() {
+        return {
+            matrix: new Matrix(3, 3, true, false),
+            determinantCalculated: false,
+        };
+    },
+};
+</script>
+
+<style scoped>
+.calculator {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+button {
+    margin: 10px 20px;
+    padding: 5px;
+    font-size: 1em;
+    display: inline-block;
+    background-color: #4bbf44;
+    color: black;
+    border-radius: 5px;
+    border: 3px solid #4bbf44;
+    transition: all 0.1s;
+    cursor: pointer;
+}
+
+button:hover {
+    border-color: #94dada;
+}
+
+.result {
+    display: inline-block;
+    font-size: 1em;
+    font-family: "Roboto", sans-serif;
+}
+</style>
