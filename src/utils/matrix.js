@@ -4,6 +4,7 @@ export default class Matrix {
         this.colCount = colCount;
         this.isSquare = isSquare;
         this.isAugmented = isAugmented;
+        this.determinant = 0;
 
         this.matrix = [];
 
@@ -46,7 +47,11 @@ export default class Matrix {
 
     setRowCount(newRowCount) {
         newRowCount = parseInt(newRowCount);
-        if (newRowCount > 0 && newRowCount <= 20 && newRowCount != this.rowCount) {
+        if (
+            newRowCount > 0 &&
+            newRowCount <= 20 &&
+            newRowCount != this.rowCount
+        ) {
             this.matrix.length = newRowCount;
             this.kVector.length = newRowCount;
 
@@ -57,15 +62,19 @@ export default class Matrix {
 
             this.rowCount = newRowCount;
 
-            return true //size changed
+            return true; //size changed
         }
 
-        return false
+        return false;
     }
 
     setColCount(newColCount) {
         newColCount = parseInt(newColCount);
-        if (newColCount > 0 && newColCount <= 20 && newColCount != this.colCount) {
+        if (
+            newColCount > 0 &&
+            newColCount <= 20 &&
+            newColCount != this.colCount
+        ) {
             for (let i = 0; i < this.rowCount; i++) {
                 this.matrix[i].length = newColCount;
                 for (let j = this.colCount; j < newColCount; j++) {
@@ -79,10 +88,10 @@ export default class Matrix {
                 this.setRowCount(newColCount);
             }
 
-            return true //size changed
+            return true; //size changed
         }
 
-        return false
+        return false;
     }
 
     removeCol() {
@@ -106,9 +115,12 @@ export default class Matrix {
         this.kVector[rowIndex] = parseFloat(newValue.target.value);
     }
 
-    calculateDetetrminantRecursively() {
-        this.determinant = this.calculateDeterminant(this.matrix, this.matrix.length);
-        console.log(this.determinant)
+    calculateDetetrminantRecursively(matrix) {
+        if (matrix == null) {
+            return this.calculateDeterminant(this.matrix, this.matrix.length);
+        }
+
+        return this.calculateDeterminant(matrix, matrix.length);
     }
 
     calculateDeterminant(matrix, order) {
@@ -156,21 +168,21 @@ export default class Matrix {
         return Math.round(determinant * 10000) / 10000;
     }
 
-    calculateSolutionsWithKrammer(matrix, kVector) {
-        let result = {};
+    calculateSolutionsWithCramer() {
+        let matrix = this.matrix;
+        let kVector = this.kVector;
+
+        let solutions = [];
         let rowCount = matrix.length;
         let columnCount = matrix[0].length;
         let determinant = this.calculateDetetrminantRecursively(matrix);
-        result.determinant = determinant;
+
         if (determinant == 0) {
-            result.roots = [];
-            return result;
+            return {solutions: [], determinant: 0};
         }
 
         let matrixForInsertingKVector = JSON.parse(JSON.stringify(this.matrix));
 
-
-        let solutions = [];
         // insert the kVector in every column one by one
         for (let i = 0; i < columnCount; i++) {
             if (i > 0) {
@@ -187,13 +199,11 @@ export default class Matrix {
                 matrixForInsertingKVector
             );
 
-            console.table(currentDeterminant, determinant);
             solutions[i] =
                 Math.round((currentDeterminant / determinant) * 10000) / 10000;
         }
-
-        result.solutions = solutions;
-        return result;
+        
+        return {solutions: solutions, determinant: determinant};
     }
 
     multiplyMatrices(matrix1, matrix2) {
