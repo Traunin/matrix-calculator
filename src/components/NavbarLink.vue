@@ -1,19 +1,16 @@
 <template>
     <li>
-        <a :href="'#' + link" :class = "activeClasses">{{ name }}</a>
+        <router-link
+            :to="`/${link}`"
+            active-class="active"
+            >{{ name }}</router-link
+        >
     </li>
 </template>
 
 <script>
 export default {
-    props: ['name', 'link', 'index', 'isActive'],
-    computed: {
-        activeClasses() {
-            return {
-                active: this.isActive,
-            }
-        }
-    }
+    props: ["name", "link"],
 };
 </script>
 
@@ -53,6 +50,6 @@ a:hover::after {
 }
 
 .active {
-    background-color: #94DADA;
+    background-color: #94dada;
 }
 </style>
