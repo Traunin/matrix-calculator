@@ -3,9 +3,10 @@
         <input
             type="number"
             ref="input"
-            :value="value"
+            v-model="displayedValue"
             :id="`cell-${matrixId}-${colIndex}-${rowIndex}`"
             @click="selectAllText"
+            @blur="unsetNaN"
         />
     </td>
 </template>
@@ -30,9 +31,25 @@ export default {
         },
     },
 
+    data() {
+        return {
+            displayedValue: this.value,
+        };
+    },
+
     methods: {
         selectAllText() {
             this.$refs.input.select();
+        },
+
+        unsetNaN() {
+            this.displayedValue = this.value; // puts a zero when the cell is empty
+        },
+    },
+
+    watch: {
+        value() {
+            this.displayedValue = this.value; //updates value in cell when matrix is externally updated
         },
     },
 };
