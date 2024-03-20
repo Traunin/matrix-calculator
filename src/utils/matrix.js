@@ -108,11 +108,18 @@ export default class Matrix {
     }
 
     updateCellValue(rowIndex, colIndex, newValue) {
-        this.matrix[rowIndex][colIndex] = parseFloat(newValue.target.value);
+        let newVal = parseFloat(newValue.target.value)
+        this.matrix[rowIndex][colIndex] = newVal ? newVal : 0;
     }
 
     updateKVectorValue(rowIndex, newValue) {
         this.kVector[rowIndex] = parseFloat(newValue.target.value);
+    }
+
+    setMatrix(matrix) {
+        this.rowCount = matrix.length;
+        this.colCount = matrix[0].length;
+        this.matrix = matrix;
     }
 
     calculateDetetrminantRecursively(matrix) {
@@ -178,7 +185,7 @@ export default class Matrix {
         let determinant = this.calculateDetetrminantRecursively(matrix);
 
         if (determinant == 0) {
-            return {solutions: [], determinant: 0};
+            return { solutions: [], determinant: 0 };
         }
 
         let matrixForInsertingKVector = JSON.parse(JSON.stringify(this.matrix));
@@ -202,19 +209,19 @@ export default class Matrix {
             solutions[i] =
                 Math.round((currentDeterminant / determinant) * 10000) / 10000;
         }
-        
-        return {solutions: solutions, determinant: determinant};
+
+        return { solutions: solutions, determinant: determinant };
     }
 
-    multiplyMatrices(matrix1, matrix2) {
+    static multiplyMatrices(matrix1, matrix2) {
         let product = [];
         // Determine dimensions of matrices
         let complementSquareSize = matrix1.length;
         let productColCount = matrix1[0].length;
         let productRowCount = matrix2.length;
 
-        console.table(matrix1);
-        console.table(matrix2);
+        //console.table(matrix1);
+        //console.table(matrix2);
 
         // Initialize product matrix with zeros
         for (let i = 0; i < productRowCount; i++) {
