@@ -32,8 +32,8 @@
 
         <table>
             <tr>
-                <th>{{ matrix.rowCount }} x {{ matrix.colCount }}</th>
-                <th v-for="colIndex in matrix.colCount">
+                <th>{{ displayedRowCount }} x {{ displayedColCount }}</th>
+                <th v-for="colIndex in displayedColCount">
                     {{ colIndex }}
                 </th>
 
@@ -46,7 +46,7 @@
                     :col-index="colIndex"
                     :row-index="rowIndex"
                     :matrix-id="id"
-                    :value="value"
+                    :value="value == 0 ? 0 : value"
                     @input="(e) => updateCellValue(rowIndex, colIndex, e)"
                 ></matrix-cell>
 
@@ -63,96 +63,83 @@
     </div>
 </template>
 
-<script>
-import MatrixCell from "@/components/MatrixCell.vue";
+<script setup>
 import Matrix from "@/utils/matrix";
-import uidGenerator from "@/utils/uidGenerator";
+import MatrixCell from "@/components/MatrixCell.vue";
+import { uidGet } from "@/utils/uidGenerator.js";
+import { computed, defineProps, reactive, watch, ref } from "vue";
 
-export default {
-    components: {
-        MatrixCell,
+const id = uidGet();
+
+const props = defineProps({
+    userResizable: {
+        type: Boolean,
+        default: true,
     },
 
-    mixins: [uidGenerator],
-
-    props: {
-        userResizable: {
-            type: Boolean,
-            default: true,
-        },
-
-        matrix: {
-            type: Matrix,
-            required: true,
-        },
+    matrix: {
+        type: Matrix,
+        required: true,
     },
+});
 
-    data() {
-        return {
-            inputRowCount: parseInt(this.matrix.rowCount),
-            inputColCount: parseInt(this.matrix.colCount),
-            id: this.uidGet(),
-        };
-    },
+let matrix = reactive(props.matrix);
 
-    watch: {
-        inputRowCount(val) {
-            if (this.matrix.setRowCount(val)) {
-                this.$emit("update");
-            }
-        },
+let inputRowCount = ref(parseInt(matrix.rowCount));
+let inputColCount = ref(parseInt(matrix.colCount));
 
-        inputColCount(val) {
-            if (this.matrix.setColCount(val)) {
-                this.$emit("update");
-            }
-        },
-    },
+const displayedRowCount = computed(() => {
+    return matrix.rowCount;
+});
 
-    methods: {
-        updateDisplayedRowCount() {
-            this.inputRowCount = this.matrix.rowCount;
-        },
+const displayedColCount = computed(() => {
+    return matrix.colCount;
+});
 
-        updateDisplayedColCount() {
-            this.inputColCount = this.matrix.colCount;
-        },
+function updateDisplayedRowCount() {
+    inputRowCount.value = matrix.rowCount;
+}
 
-        addRow() {
-            this.matrix.addRow();
-            this.inputRowCount = this.matrix.rowCount;
-            this.$emit("update");
-        },
+function updateDisplayedColCount() {
+    inputColCount.value = matrix.colCount;
+}
 
-        removeRow() {
-            this.matrix.removeRow();
-            this.inputRowCount = this.matrix.rowCount;
-            this.$emit("update");
-        },
+function addRow() {
+    matrix.addRow();
+}
 
-        addCol() {
-            this.matrix.addCol();
-            this.inputColCount = this.matrix.colCount;
-            this.$emit("update");
-        },
+function removeRow() {
+    matrix.removeRow();
+}
 
-        removeCol() {
-            this.matrix.removeCol();
-            this.inputColCount = this.matrix.colCount;
-            this.$emit("update");
-        },
+function addCol() {
+    matrix.addCol();
+}
 
-        updateCellValue(rowIndex, colIndex, e) {
-            this.matrix.updateCellValue(rowIndex, colIndex, e);
-            this.$emit("update");
-        },
+function removeCol() {
+    matrix.removeCol();
+}
 
-        updateKVectorValue(rowIndex, e) {
-            this.matrix.updateKVectorValue(rowIndex, e);
-            this.$emit("update");
-        },
-    },
-};
+function updateCellValue(rowIndex, colIndex, e) {
+    matrix.updateCellValue(rowIndex, colIndex, e);
+}
+
+function updateKVectorValue(rowIndex, e) {
+    matrix.updateKVectorValue(rowIndex, e);
+}
+
+watch(inputRowCount, (val) => {
+    matrix.setRowCount(val);
+});
+
+watch(inputColCount, (val) => {
+    matrix.setColCount(val);
+});
+
+watch(matrix, () => {
+    updateDisplayedRowCount();
+    updateDisplayedColCount();
+});
 </script>
 
 <style scoped>
@@ -161,6 +148,10 @@ export default {
     display: inline-flex;
     flex-direction: column;
     justify-content: center;
+}
+
+table {
+    margin: auto;
 }
 
 td {
@@ -224,4 +215,3 @@ button:hover {
     margin: 0 5px;
 }
 </style>
-../utils/uidGenerator

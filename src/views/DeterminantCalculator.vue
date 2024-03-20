@@ -1,12 +1,7 @@
 <template>
     <div class="calculator">
         <div class="determinant">
-            <button
-                @click.prevent="
-                    determinantCalculated = true;
-                    determinant = matrix.calculateDetetrminantRecursively();
-                "
-            >
+            <button @click.prevent="calculateDeterminant">
                 Найти определитель
             </button>
             <div
@@ -17,30 +12,25 @@
             </div>
         </div>
 
-        <matrix-editor
-            @update="determinantCalculated = false"
-            :matrix="matrix"
-        ></matrix-editor>
+        <matrix-editor :matrix="matrix"></matrix-editor>
     </div>
 </template>
 
-<script>
+<script setup>
 import MatrixEditor from "@/components/MatrixEditor.vue";
 import Matrix from "@/utils/matrix";
+import { ref, reactive, watch } from "vue";
 
-export default {
-    components: {
-        MatrixEditor,
-    },
+let matrix = reactive(new Matrix(4, 4, true, false));
+let determinantCalculated = ref(false);
+let determinant = ref(0);
 
-    data() {
-        return {
-            matrix: new Matrix(4, 4, true, false),
-            determinantCalculated: false,
-            determinant: 0,
-        };
-    },
-};
+watch(matrix, () => (determinantCalculated.value = false));
+
+function calculateDeterminant() {
+    determinantCalculated.value = true;
+    determinant.value = matrix.calculateDetetrminantRecursively();
+}
 </script>
 
 <style scoped>

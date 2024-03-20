@@ -27,33 +27,22 @@
     </div>
 </template>
 
-<script>
+<script setup>
 import MatrixEditor from "@/components/MatrixEditor.vue";
 import Matrix from "@/utils/matrix";
+import { ref, reactive } from "vue";
 
-export default {
-    components: {
-        MatrixEditor,
-    },
+let matrix = reactive(new Matrix(4, 4, true, true));
+let solutionsFound = ref(false);
+let solutions = ref([]);
+let determinant = ref(0);
 
-    data() {
-        return {
-            matrix: new Matrix(4, 4, true, true),
-            solutionsFound: false,
-            solutions: [],
-            determinant: 0,
-        };
-    },
-
-    methods: {
-        getSolutions() {
-            let result = this.matrix.calculateSolutionsWithCramer();
-            this.solutions = result.solutions;
-            this.determinant = result.determinant;
-            this.solutionsFound = true;
-        },
-    },
-};
+function getSolutions() {
+    let result = matrix.calculateSolutionsWithCramer();
+    solutions.value = result.solutions;
+    determinant.value = result.determinant;
+    solutionsFound.value = true;
+}
 </script>
 
 <style scoped>
