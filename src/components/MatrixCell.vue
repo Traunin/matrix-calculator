@@ -49,7 +49,6 @@ export default {
 
     watch: {
         value() {
-            console.log(this.displayedValue)
             if (this.displayedValue !== '') {
                 this.displayedValue = this.value;
             }
