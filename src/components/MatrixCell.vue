@@ -49,7 +49,11 @@ export default {
 
     watch: {
         value() {
-            this.displayedValue = this.value; //updates value in cell when matrix is externally updated
+            console.log(this.displayedValue)
+            if (this.displayedValue !== '') {
+                this.displayedValue = this.value;
+            }
+             //updates value in cell when matrix is externally updated
         },
     },
 };
