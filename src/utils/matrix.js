@@ -108,7 +108,7 @@ export default class Matrix {
     }
 
     updateCellValue(rowIndex, colIndex, newValue) {
-        let newVal = parseFloat(newValue.target.value)
+        let newVal = parseFloat(newValue.target.value);
         this.matrix[rowIndex][colIndex] = newVal ? newVal : 0;
     }
 
@@ -116,10 +116,80 @@ export default class Matrix {
         this.kVector[rowIndex] = parseFloat(newValue.target.value);
     }
 
-    setMatrix(matrix) {
+    updateMatrixFromString(newValue) {
+        // Split the text into lines
+        const lines = newValue.trim().split("\n");
+        // Determine the dimensions of the matrix
+        const rows = lines.length;
+        let cols = this.isSquare ? rows : 0;
+        // Determine the maximum column count among rows
+        if (!this.isSquare) {
+            cols = lines.reduce((maxCols, line) => {
+                const rowCols = line.trim().split(/\s+/).length;
+                return Math.max(maxCols, rowCols);
+            }, 0);
+        }
+        // Create a new 2D array for the matrix
+        const matrix = [];
+        // Parse the text and populate the matrix
+        for (let i = 0; i < rows; i++) {
+            matrix[i] = [];
+            const rowValues = lines[i].trim().split(/\s+/).map(parseFloat);
+            for (let j = 0; j < cols; j++) {
+                matrix[i][j] = rowValues[j] || 0; // fill with 0 if no value
+            }
+            // Fill remaining columns with 0 if not square matrix
+            if (!this.isSquare && cols > rowValues.length) {
+                for (let k = rowValues.length; k < cols; k++) {
+                    matrix[i][k] = 0;
+                }
+            }
+        }
+
+        // If isAugmented is true, calculate the kVector
+        let kVector = null;
+        if (this.isAugmented) {
+            kVector = new Array(cols - 1).fill(0);
+            for (let i = 0; i < rows; i++) {
+                const kValue = matrix[i].pop();
+                kVector[i] = kValue;
+            }
+        }
+
+        this.setMatrix(matrix, kVector);
+    }
+
+    getMatrixAsString() {
+        let string = "";
+
+        for (let i = 0; i < this.rowCount; i++) {
+            for (let j = 0; j < this.colCount; j++) {
+                string += this.matrix[i][j];
+                if (j < this.colCount - 1) {
+                    string += " ";
+                }
+            }
+
+            if (this.isAugmented) {
+                string += " ";
+                string += this.kVector[i];
+            }
+
+            if (i < this.rowCount - 1) {
+                string += "\n";
+            }
+        }
+
+        return string;
+    }
+
+    setMatrix(matrix, kVector) {
         this.rowCount = matrix.length;
         this.colCount = matrix[0].length;
         this.matrix = matrix;
+        if (kVector != null) {
+            this.kVector = kVector;
+        }
     }
 
     calculateDetetrminantRecursively(matrix) {

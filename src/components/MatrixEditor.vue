@@ -1,6 +1,26 @@
 <template>
     <div class="matrix">
         <div
+            class="matrix-editor"
+            v-show="editorOpen"
+        >
+            <textarea
+                :id="`matrix-editor-${id}`"
+                :cols="displayedColCount * 2 + 4"
+                :rows="displayedRowCount + 2"
+                @keypress="isNumberOrSpace($event)"
+                v-model="editorText"
+                ref="matrixEditor"
+            ></textarea>
+            <button @click.prevent="closeEditor">Закрыть</button>
+        </div>
+        <button
+            @click.prevent="openEditor"
+            class="open-editor-button"
+        >
+            Копировать/вставить матрицу
+        </button>
+        <div
             class="size-controller"
             v-if="userResizable"
         >
@@ -11,6 +31,7 @@
                 <div class="row-count-caption">Строки</div>
                 <button @click.prevent="removeRow">-</button>
                 <input
+                    :id="`row-count-editor-${id}`"
                     v-model="inputRowCount"
                     @blur="updateDisplayedRowCount"
                 />
@@ -23,8 +44,10 @@
                 </div>
                 <button @click.prevent="removeCol">-</button>
                 <input
+                    :id="`col-count-editor-${id}`"
                     v-model="inputColCount"
                     @blur="updateDisplayedColCount"
+                    @keypress="isNumber($event)"
                 />
                 <button @click.prevent="addCol">+</button>
             </div>
@@ -47,6 +70,7 @@
                     :row-index="rowIndex"
                     :matrix-id="id"
                     :value="value == 0 ? 0 : value"
+                    @keypress="isNumber($event)"
                     @input="(e) => updateCellValue(rowIndex, colIndex, e)"
                 ></matrix-cell>
 
@@ -56,6 +80,7 @@
                     :row-index="rowIndex"
                     :matrix-id="id"
                     :value="matrix.kVector[rowIndex]"
+                    @keypress="isNumber($event)"
                     @input="(e) => updateKVectorValue(rowIndex, e)"
                 ></matrix-cell>
             </tr>
@@ -70,6 +95,9 @@ import { uidGet } from "@/utils/uidGenerator.js";
 import { computed, defineProps, reactive, watch, ref } from "vue";
 
 const id = uidGet();
+let editorOpen = ref(false);
+let editorText = ref("");
+let matrixEditor = ref(null);
 
 const props = defineProps({
     userResizable: {
@@ -128,6 +156,37 @@ function updateKVectorValue(rowIndex, e) {
     matrix.updateKVectorValue(rowIndex, e);
 }
 
+function openEditor() {
+    editorText.value = matrix.getMatrixAsString();
+    editorOpen.value = true;
+    setTimeout(()=>matrixEditor.value.select(), 0)
+}
+
+function closeEditor() {
+    matrix.updateMatrixFromString(editorText.value);
+    editorOpen.value = false;
+}
+
+function isNumber(evt) {
+    //evt = evt ? evt : window.event;
+    var charCode = evt.which ? evt.which : evt.keyCode;
+    if (charCode > 31 && (charCode < 48 || charCode > 57) && charCode !== 46) {
+        evt.preventDefault();
+    } else {
+        return true;
+    }
+}
+
+function isNumberOrSpace(evt) {
+    //evt = evt ? evt : window.event;
+    var charCode = evt.which ? evt.which : evt.keyCode;
+    if (charCode > 31 && (charCode < 48 || charCode > 57) && charCode !== 46 && charCode !== 32) {
+        evt.preventDefault();
+    } else {
+        return true;
+    }
+}
+
 watch(inputRowCount, (val) => {
     matrix.setRowCount(val);
 });
@@ -139,6 +198,7 @@ watch(inputColCount, (val) => {
 watch(matrix, () => {
     updateDisplayedRowCount();
     updateDisplayedColCount();
+    editorText.value = matrix.getMatrixAsString();
 });
 </script>
 
@@ -148,6 +208,55 @@ watch(matrix, () => {
     display: inline-flex;
     flex-direction: column;
     justify-content: center;
+    position: relative;
+}
+
+.matrix-editor {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    flex-direction: column;
+}
+
+.matrix-editor textarea {
+    border: 1px solid #000;
+    margin: 5px 0;
+    padding: 5px;
+    font-size: 1.05em;
+}
+
+.matrix-editor button {
+    font-size: 15px;
+    border-radius: 5px;
+    padding: 5px;
+    border: none;
+    background-color: #4bbf44;
+    border: 2px solid #4bbf44;
+    text-align: center;
+    cursor: pointer;
+}
+
+.matrix-editor button:hover {
+    border: 2px solid #dedcff;
+}
+
+.open-editor-button {
+    font-size: 15px;
+    border-radius: 5px;
+    padding: 5px;
+    border: none;
+    background-color: #4bbf44;
+    border: 2px solid #4bbf44;
+    text-align: center;
+    cursor: pointer;
+    align-self: center;
+    margin-bottom: 5px;
+}
+
+.open-editor-button:hover {
+    border: 2px solid #dedcff;
 }
 
 table {
@@ -168,7 +277,7 @@ th {
     text-wrap: nowrap;
 }
 
-button {
+.size-controller button {
     font-size: 15px;
     width: 25px;
     height: 25px;
@@ -179,7 +288,7 @@ button {
     cursor: pointer;
 }
 
-button:hover {
+.size-controller button:hover {
     border: 2px solid #dedcff;
 }
 
