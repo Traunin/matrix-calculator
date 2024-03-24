@@ -35,5 +35,6 @@ ul {
     display: flex;
     justify-content: center;
     background: #f5fcf6;
+    margin-bottom: 20px;
 }
 </style>
