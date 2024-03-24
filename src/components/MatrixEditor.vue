@@ -14,22 +14,40 @@
             ></textarea>
             <button @click.prevent="closeEditor">Закрыть</button>
         </div>
-        <button
-            @click.prevent="openEditor"
-            class="open-editor-button"
-        >
-            Копировать/вставить матрицу
-        </button>
-        <div
-            class="size-controller"
-            v-if="userResizable"
-        >
+
+        <div class="size-controller">
+            <button
+                @click.prevent="openEditor"
+                class="open-editor-button"
+            >
+                <svg
+                    fill="#000000"
+                    version="1.1"
+                    id="Capa_1"
+                    xmlns="http://www.w3.org/2000/svg"
+                    xmlns:xlink="http://www.w3.org/1999/xlink"
+                    width="15px"
+                    height="15px"
+                    viewBox="0 0 93.842 93.843"
+                    xml:space="preserve"
+                >
+                    <g>
+                        <path
+                            d="M74.042,11.379h-9.582v-0.693c0-1.768-1.438-3.205-3.206-3.205h-6.435V3.205C54.819,1.437,53.381,0,51.614,0H42.23
+		c-1.768,0-3.206,1.438-3.206,3.205V7.48H32.59c-1.768,0-3.206,1.438-3.206,3.205v0.693h-9.582c-2.393,0-4.339,1.945-4.339,4.34
+		v73.785c0,2.394,1.946,4.34,4.339,4.34h54.238c2.394,0,4.339-1.946,4.339-4.34V15.719C78.38,13.324,76.434,11.379,74.042,11.379z
+		 M32.617,25.336h28.61c1.709,0,3.102-1.391,3.102-3.1v-3.438h7.554l0.021,68.164l-49.939,0.021V18.801h7.554v3.436
+		C29.517,23.945,30.907,25.336,32.617,25.336z"
+                        />
+                    </g>
+                </svg>
+            </button>
             <div
                 class="row-controller"
-                v-if="!matrix.isSquare"
+                v-if="!matrix.isSquare && userResizable"
             >
                 <div class="row-count-caption">Строки</div>
-                <button @click.prevent="removeRow">-</button>
+                <button @click.prevent="removeRow">—</button>
                 <input
                     :id="`row-count-editor-${id}`"
                     v-model="inputRowCount"
@@ -38,11 +56,14 @@
                 <button @click.prevent="addRow">+</button>
             </div>
 
-            <div class="col-controller">
+            <div
+                class="col-controller"
+                v-if="userResizable"
+            >
                 <div class="col-count-caption">
                     {{ matrix.isSquare ? "Порядок" : "Столбцы" }}
                 </div>
-                <button @click.prevent="removeCol">-</button>
+                <button @click.prevent="removeCol">—</button>
                 <input
                     :id="`col-count-editor-${id}`"
                     v-model="inputColCount"
@@ -159,7 +180,7 @@ function updateKVectorValue(rowIndex, e) {
 function openEditor() {
     editorText.value = matrix.getMatrixAsString();
     editorOpen.value = true;
-    setTimeout(()=>matrixEditor.value.select(), 0)
+    setTimeout(() => matrixEditor.value.select(), 0);
 }
 
 function closeEditor() {
@@ -180,7 +201,12 @@ function isNumber(evt) {
 function isNumberOrSpace(evt) {
     //evt = evt ? evt : window.event;
     var charCode = evt.which ? evt.which : evt.keyCode;
-    if (charCode > 31 && (charCode < 48 || charCode > 57) && charCode !== 46 && charCode !== 32) {
+    if (
+        charCode > 31 &&
+        (charCode < 48 || charCode > 57) &&
+        charCode !== 46 &&
+        charCode !== 32
+    ) {
         evt.preventDefault();
     } else {
         return true;
@@ -242,21 +268,25 @@ watch(matrix, () => {
     border: 2px solid #dedcff;
 }
 
-.open-editor-button {
+.size-controller .open-editor-button {
     font-size: 15px;
     border-radius: 5px;
     padding: 5px;
     border: none;
     background-color: #4bbf44;
-    border: 2px solid #4bbf44;
+    border: 2px solid #4bbf44 !important;
     text-align: center;
     cursor: pointer;
     align-self: center;
-    margin-bottom: 5px;
+    width: 25px;
+    height: 25px;
+    padding: 3px;
+    align-self: end;
+    box-sizing: border-box;
 }
 
 .open-editor-button:hover {
-    border: 2px solid #dedcff;
+    border-color: #dedcff !important;
 }
 
 table {
