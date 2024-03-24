@@ -290,9 +290,6 @@ export default class Matrix {
         let productColCount = matrix1[0].length;
         let productRowCount = matrix2.length;
 
-        //console.table(matrix1);
-        //console.table(matrix2);
-
         // Initialize product matrix with zeros
         for (let i = 0; i < productRowCount; i++) {
             product[i] = [];
@@ -313,5 +310,72 @@ export default class Matrix {
         }
 
         return product;
+    }
+
+    findInverseMatrix() {
+        let determinant = this.calculateDetetrminantRecursively();
+
+        if (determinant == 0) return { determinant }; // unable to find because the determinant is zero
+
+        let algebraicComplementMatrix = new Array(this.rowCount);
+        if (this.rowCount == 1) {
+            algebraicComplementMatrix = [[1]]
+        } else {
+            for (let i = 0; i < this.rowCount; i++) {
+                algebraicComplementMatrix[i] = new Array(this.colCount);
+                for (let j = 0; j < this.colCount; j++) {
+                    algebraicComplementMatrix[i][j] = this.findAlgebraicComplement(
+                        this.matrix,
+                        i,
+                        j
+                    );
+                }
+            }
+        }
+
+        let inverseMatrix = this.transposeMatrix(algebraicComplementMatrix);
+        for (let i = 0; i < inverseMatrix.length; i++) {
+            for (let j = 0; j < inverseMatrix[0].length; j++) {
+                inverseMatrix[i][j] =
+                    Math.round((inverseMatrix[i][j] / determinant) * 10000) /
+                    10000;
+            }
+        }
+
+        return { determinant, inverseMatrix };
+    }
+
+    findAlgebraicComplement(matrix, row, col) {
+        let minorMatrix = new Array(matrix.length - 1);
+        for (let i = 0; i < minorMatrix.length; i++) {
+            minorMatrix[i] = new Array(matrix[0].length - 1);
+            for (let j = 0; j < matrix.length; j++) {
+                minorMatrix[i][j] =
+                    matrix[i + (i >= row ? 1 : 0)][j + (j >= col ? 1 : 0)];
+            }
+        }
+
+        return (
+            this.calculateDetetrminantRecursively(minorMatrix) *
+            ((row + col) % 2 ? -1 : 1)
+        );
+    }
+
+    transposeMatrix(matrix) {
+        let transposedMatrixRowCount = matrix[0].length;
+        let transposedMatrixColCount = matrix.length;
+
+        let transposedMatrix = new Array(transposedMatrixRowCount);
+        for (let i = 0; i < transposedMatrixRowCount; i++) {
+            transposedMatrix[i] = new Array(transposedMatrixColCount);
+        }
+
+        for (let i = 0; i < matrix.length; i++) {
+            for (let j = 0; j < matrix[0].length; j++) {
+                transposedMatrix[j][i] = matrix[i][j];
+            }
+        }
+
+        return transposedMatrix;
     }
 }

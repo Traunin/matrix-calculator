@@ -9,3 +9,6 @@ Uses Cramer's method to find solutions for systems of linear equations
 
 ### MatrixMultiplier
 Multiplies two matrices
+
+### InverseMatrix
+Finds inverse matrix

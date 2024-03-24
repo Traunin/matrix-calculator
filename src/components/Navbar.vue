@@ -24,6 +24,7 @@ export default {
                 { name: "Рассчет определителя рекурсией", link: "determinant" },
                 { name: "Найти корни системы методом Крамера", link: "solver" },
                 { name: "Умножить матрицы", link: "multiplier" },
+                { name: "Обратная матрица", link: "inverse" },
             ],
         };
     },
