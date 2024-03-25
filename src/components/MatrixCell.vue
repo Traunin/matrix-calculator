@@ -49,10 +49,10 @@ export default {
 
     watch: {
         value() {
-            if (this.displayedValue !== '') {
+            if (this.displayedValue !== "") {
                 this.displayedValue = this.value;
             }
-             //updates value in cell when matrix is externally updated
+            //updates value in cell when matrix is externally updated
         },
     },
 };
@@ -76,13 +76,20 @@ td {
     border: 1px solid #000;
 }
 
+@media screen and (min-width: 1000px) {
+    td input {
+        width: 55px;
+        font-size: 1.05em;
+    }
+}
+
 input {
-    width: 55px;
+    width: 27px;
+    font-size: 0.95em;
     height: 27px;
     outline: none;
     text-align: center;
     font-family: "Robot", sans-serif;
-    font-size: 1.05em;
     border: none;
     padding: 0;
 }
