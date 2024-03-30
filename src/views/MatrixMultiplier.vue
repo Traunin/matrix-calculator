@@ -51,7 +51,7 @@ watch(matrix1, () => {
     display: flex;
     flex-direction: row;
     justify-content: center;
-    align-items: end;
+    align-items: flex-end;
 }
 
 .col {

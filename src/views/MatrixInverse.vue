@@ -88,7 +88,7 @@ button:hover {
 
 .matrix-display {
     display: flex;
-    align-items: end;
+    align-items: flex-end;
 }
 
 .inverse-matrix {
