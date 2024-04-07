@@ -1,6 +1,12 @@
 <template>
-    <navbar> </navbar>
-    <router-view></router-view>
+    <div class="container">
+        <header>
+            <div class="logo">Калькулятор матриц</div>
+            <navbar> </navbar>
+        </header>
+
+        <router-view></router-view>
+    </div>
 </template>
 
 <script>
@@ -12,3 +18,23 @@ export default {
     },
 };
 </script>
+
+<style scoped>
+.container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+}
+
+header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.logo {
+    font-family: 'Roboto', sans-serif;
+}
+</style>
