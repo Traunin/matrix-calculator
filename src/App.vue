@@ -1,22 +1,33 @@
 <template>
-    <div class="container">
+    <div class="container" :class = "theme">
         <header>
             <div class="logo">Калькулятор матриц</div>
             <navbar> </navbar>
+            <theme-switcher @theme-switch="setTheme"> </theme-switcher>
         </header>
 
         <router-view></router-view>
     </div>
 </template>
 
-<script>
+<script setup>
 import Navbar from "@/components/Navbar.vue";
+import ThemeSwitcher from "@/components/ThemeSwitcher.vue";
+import { ref, computed } from "vue";
 
-export default {
-    components: {
-        Navbar,
-    },
-};
+let theme = ref("light");
+
+function setTheme(themeToSet) {
+    theme.value = themeToSet;
+    console.log(theme.value)
+}
+
+// export default {
+//     components: {
+//         Navbar,
+//         ThemeSwitcher
+//     },
+// };
 </script>
 
 <style scoped>
@@ -35,6 +46,6 @@ header {
 }
 
 .logo {
-    font-family: 'Roboto', sans-serif;
+    font-family: "Roboto", sans-serif;
 }
 </style>
