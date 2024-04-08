@@ -319,16 +319,13 @@ export default class Matrix {
 
         let algebraicComplementMatrix = new Array(this.rowCount);
         if (this.rowCount == 1) {
-            algebraicComplementMatrix = [[1]]
+            algebraicComplementMatrix = [[1]];
         } else {
             for (let i = 0; i < this.rowCount; i++) {
                 algebraicComplementMatrix[i] = new Array(this.colCount);
                 for (let j = 0; j < this.colCount; j++) {
-                    algebraicComplementMatrix[i][j] = this.findAlgebraicComplement(
-                        this.matrix,
-                        i,
-                        j
-                    );
+                    algebraicComplementMatrix[i][j] =
+                        this.findAlgebraicComplement(this.matrix, i, j);
                 }
             }
         }
@@ -377,5 +374,25 @@ export default class Matrix {
         }
 
         return transposedMatrix;
+    }
+
+    findSolutionsWithInverseMatrix() {
+        let inverseMatrixResult = this.findInverseMatrix();
+        if (inverseMatrixResult.determinant == 0) {
+            return { determinant: 0 };
+        }
+
+        let kVectorMatrix = new Array(this.kVector.length);
+        for (let i = 0; i < this.kVector.length; i++) {
+            kVectorMatrix[i] = [this.kVector[i]];
+        }
+
+        return {
+            determinant: inverseMatrixResult.determinant,
+            solution: Matrix.multiplyMatrices(
+                kVectorMatrix,
+                inverseMatrixResult.inverseMatrix
+            ),
+        };
     }
 }

@@ -22,9 +22,10 @@ export default {
         return {
             pages: [
                 { name: "Рассчет определителя рекурсией", link: "determinant" },
-                { name: "Найти корни системы методом Крамера", link: "solver" },
+                { name: "Решение системы методом Крамера", link: "solver" },
                 { name: "Умножить матрицы", link: "multiplier" },
                 { name: "Обратная матрица", link: "inverse" },
+                { name: "Решение системы методом обратной матрицы", link: "inverse_solver" },
             ],
         };
     },
