@@ -1,11 +1,12 @@
 <template>
     <td>
         <input
-            type="number"
+            type="text"
             ref="input"
+            inputmode="numeric"
             v-model="displayedValue"
             :id="`cell-${matrixId}-${colIndex}-${rowIndex}`"
-            @click="selectAllText"
+            @focus="selectAllText"
             @blur="unsetNaN"
         />
     </td>
@@ -73,7 +74,7 @@ input[type="number"] {
 }
 
 td {
-    border: 1px solid #000;
+    border: 2px solid var(--text-color);
 }
 
 @media screen and (min-width: 1000px) {
@@ -92,5 +93,7 @@ input {
     font-family: "Robot", sans-serif;
     border: none;
     padding: 0;
+    color: var(--text-color);
+    background: var(--input-background);
 }
 </style>
