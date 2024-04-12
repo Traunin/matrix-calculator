@@ -59,7 +59,7 @@ button {
     font-size: 1em;
     display: inline-block;
     background-color: #4bbf44;
-    color: black;
+    color: var(--text-color);
     border-radius: 5px;
     border: 3px solid #4bbf44;
     transition: all 0.1s;
