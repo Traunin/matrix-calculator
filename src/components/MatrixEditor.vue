@@ -197,6 +197,7 @@ function isNumber(evt) {
         charCode !== 46 &&
         charCode !== 45
     ) {
+        console.log(charCode)
         evt.preventDefault();
     } else {
         return true;
@@ -210,6 +211,7 @@ function isNumberOrSpace(evt) {
         charCode > 31 &&
         (charCode < 48 || charCode > 57) &&
         charCode !== 46 &&
+        charCode !== 45 &&
         charCode !== 32
     ) {
         evt.preventDefault();
