@@ -22,13 +22,7 @@
 </template>
 
 <script>
-import NavbarLink from "@/components/NavbarLink.vue";
-
 export default {
-    components: {
-        NavbarLink,
-    },
-
     data() {
         return {
             pages: [
