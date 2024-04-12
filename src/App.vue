@@ -1,12 +1,16 @@
 <template>
-    <div class="container" :class = "theme">
+    <div
+        class="container"
+        :class="theme"
+    >
         <header>
             <div class="logo">Калькулятор матриц</div>
             <navbar> </navbar>
             <theme-switcher @theme-switch="setTheme"> </theme-switcher>
         </header>
-
-        <router-view></router-view>
+        <div class="matrix-ui">
+            <router-view></router-view>
+        </div>
     </div>
 </template>
 
@@ -19,15 +23,7 @@ let theme = ref("light");
 
 function setTheme(themeToSet) {
     theme.value = themeToSet;
-    console.log(theme.value)
 }
-
-// export default {
-//     components: {
-//         Navbar,
-//         ThemeSwitcher
-//     },
-// };
 </script>
 
 <style scoped>
@@ -37,15 +33,48 @@ function setTheme(themeToSet) {
     left: 0;
     height: 100%;
     width: 100%;
+    display: flex;
+    flex-direction: column;
+    --primary-color: #4BBF44;
+    --secondary-color: #94DADA;
+    --accent-color: #69B5CB;
+    --text-color: #081708;
+    --background-color: #F5FCF6;
+    --input-background: #FFFFFF;
+    --shadow-color: var(rgba(0,0,0,0.2))
+    color: var(--text-color);
+    background-color: var(--background-color);
+}
+
+.matrix-ui {
+    display: flex;
+    justify-content: center;
+    align-items:center;
+    flex-grow: 1;
+}
+
+.dark {
+    --text-color: #F5FCF6;
+    --background-color: #081708;
+    --input-background: #333;
+    --shadow-color: var(rgba(255,255,255,0.2))
 }
 
 header {
     display: flex;
     align-items: center;
-    margin-bottom: 20px;
+    justify-content: space-between;
+    background-color: var(--background-color);
+    color: var(--text-color);
+    border-bottom: 3px solid var(--text-color)
 }
 
 .logo {
     font-family: "Roboto", sans-serif;
+    color: var(--text-color);
+    background-color: var(--background-color);
+    font-size: 1.3em;
+    margin: 0 20px;
+    text-align: center;
 }
 </style>
