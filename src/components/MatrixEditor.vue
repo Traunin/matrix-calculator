@@ -197,6 +197,7 @@ function isNumber(evt) {
         charCode !== 46 &&
         charCode !== 45
     ) {
+        console.log(charCode)
         evt.preventDefault();
     } else {
         return true;
@@ -210,6 +211,7 @@ function isNumberOrSpace(evt) {
         charCode > 31 &&
         (charCode < 48 || charCode > 57) &&
         charCode !== 46 &&
+        charCode !== 45 &&
         charCode !== 32
     ) {
         evt.preventDefault();
@@ -252,7 +254,7 @@ watch(matrix, () => {
 }
 
 .matrix-editor textarea {
-    border: 1px solid #000;
+    border: 2px solid #000;
     margin: 5px 0;
     padding: 5px;
     font-size: 1.05em;
@@ -267,6 +269,7 @@ watch(matrix, () => {
     border: 2px solid #4bbf44;
     text-align: center;
     cursor: pointer;
+    color: var(--text-color);
 }
 
 .matrix-editor button:hover {
@@ -290,6 +293,10 @@ watch(matrix, () => {
     box-sizing: border-box;
 }
 
+svg {
+    fill: var(--text-color);
+}
+
 .open-editor-button:hover {
     border-color: #dedcff !important;
 }
@@ -300,6 +307,7 @@ table {
 
 td {
     text-align: center;
+    color: var(--text-color);
 }
 
 td:first-child {
@@ -310,6 +318,7 @@ th {
     height: 25px;
     line-height: 25px;
     text-wrap: nowrap;
+    color: var(--text-color);
 }
 
 .size-controller button {
@@ -321,6 +330,7 @@ th {
     background-color: #4bbf44;
     text-align: center;
     cursor: pointer;
+    color: var(--text-color);
 }
 
 .size-controller button:hover {
@@ -331,6 +341,7 @@ th {
     display: flex;
     justify-content: center;
     margin-bottom: 10px;
+    margin-left: 9px;
 }
 
 .size-controller input {
@@ -342,6 +353,7 @@ th {
 .col-count-caption {
     text-align: center;
     margin-bottom: 5px;
+    color: var(--text-color);
 }
 
 .size-controller input {
@@ -349,9 +361,11 @@ th {
     padding: 0;
     padding-block: 0;
     padding-inline: 0;
-    border: 1px solid #000;
+    border: 2px solid var(--text-color);
     box-sizing: border-box;
     margin: 0 10px;
+    color: var(--text-color);
+    background: var(--input-background);
 }
 
 .col-controller,

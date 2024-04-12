@@ -63,5 +63,9 @@ label.theme-switch {
 .theme-switch input {
     display: none;
 }
+
+.theme-switch {
+    margin: 0 20px;
+}
 </style>
 
