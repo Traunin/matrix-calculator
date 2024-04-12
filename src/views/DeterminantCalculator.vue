@@ -1,5 +1,6 @@
 <template>
     <div class="calculator">
+        <matrix-editor :matrix="matrix"></matrix-editor>
         <div class="determinant">
             <button @click.prevent="calculateDeterminant">
                 Найти определитель
@@ -11,8 +12,6 @@
                 Δ = {{ determinant }}
             </div>
         </div>
-
-        <matrix-editor :matrix="matrix"></matrix-editor>
     </div>
 </template>
 
@@ -46,8 +45,8 @@ button {
     padding: 5px;
     font-size: 1em;
     display: inline-block;
-    background-color: #4bbf44;
-    color: black;
+    background-color: var(--primary-color);
+    color: var(--text-color);
     border-radius: 5px;
     border: 3px solid #4bbf44;
     transition: all 0.1s;
