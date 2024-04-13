@@ -113,7 +113,7 @@
 import Matrix from "@/utils/matrix";
 import MatrixCell from "@/components/MatrixCell.vue";
 import { uidGet } from "@/utils/uidGenerator.js";
-import { computed, defineProps, reactive, watch, ref } from "vue";
+import { computed, reactive, watch, ref } from "vue";
 
 const id = uidGet();
 let editorOpen = ref(false);
