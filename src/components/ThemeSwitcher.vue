@@ -3,8 +3,8 @@
         <input
             type="checkbox"
             id="theme-switch"
-            v-model = "isDark"
-            @change = "setTheme" 
+            v-model="isDark"
+            @change="setTheme"
         /><label
             for="theme-switch"
             class="theme-switch"
@@ -43,7 +43,6 @@ function setTheme() {
 }
 </script>
 
-
 <style scoped>
 label.theme-switch {
     display: inline-block;
@@ -53,6 +52,7 @@ label.theme-switch {
     background-size: 20px 20px;
     border-radius: 50%;
     cursor: pointer;
+    margin: 0;
 }
 
 .theme-switch input:checked + label {
@@ -67,5 +67,10 @@ label.theme-switch {
 .theme-switch {
     margin: 0 20px;
 }
-</style>
 
+@media screen and (min-width: 1000px) {
+    .theme-switch {
+        margin: 0 80px 0 20px;
+    }
+}
+</style>
