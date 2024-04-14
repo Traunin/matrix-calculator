@@ -41,7 +41,6 @@ function setTheme(themeToSet) {
     --text-color: #081708;
     --background-color: #F5FCF6;
     --input-background: #FFFFFF;
-    --shadow-color: var(rgba(0,0,0,0.2))
     color: var(--text-color);
     background-color: var(--background-color);
 }
@@ -55,8 +54,8 @@ function setTheme(themeToSet) {
 
 .dark {
     --text-color: #F5FCF6;
-    --background-color: #081708;
-    --input-background: #333;
+    --background-color: rgb(41, 41, 41);
+    --input-background: #000;
     --shadow-color: var(rgba(255,255,255,0.2))
 }
 
