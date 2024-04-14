@@ -77,7 +77,7 @@ input {
     height: 27px;
     outline: none;
     text-align: center;
-    font-family: "Robot", sans-serif;
+    font-family: "Roboto Mono", monospace;
     border: none;
     padding: 0;
     color: var(--text-color);
