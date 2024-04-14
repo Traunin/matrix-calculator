@@ -76,7 +76,9 @@
 
         <table>
             <tr>
-                <th>{{ displayedRowCount }} x {{ displayedColCount }}</th>
+                <th class="size">
+                    {{ displayedRowCount }} x {{ displayedColCount }}
+                </th>
                 <th v-for="colIndex in displayedColCount">
                     {{ colIndex }}
                 </th>
@@ -84,7 +86,7 @@
                 <th v-if="matrix.isAugmented">Доп.</th>
             </tr>
             <tr v-for="(row, rowIndex) in matrix.matrix">
-                <td>{{ rowIndex + 1 }}</td>
+                <td class="row-index">{{ rowIndex + 1 }}</td>
                 <matrix-cell
                     v-for="(value, colIndex) in row"
                     :col-index="colIndex"
@@ -197,7 +199,6 @@ function isNumber(evt) {
         charCode !== 46 &&
         charCode !== 45
     ) {
-        console.log(charCode)
         evt.preventDefault();
     } else {
         return true;
@@ -242,6 +243,9 @@ watch(matrix, () => {
     flex-direction: column;
     justify-content: center;
     position: relative;
+    margin:  0 80px;
+    flex: 0 0 auto;
+    flex-grow: 1;
 }
 
 .matrix-editor {
@@ -251,13 +255,15 @@ watch(matrix, () => {
     transform: translate(-50%, -50%);
     display: flex;
     flex-direction: column;
+    z-index: 100;
 }
 
 .matrix-editor textarea {
-    border: 2px solid #000;
+    border: 2px solid var(--text-color);
     margin: 5px 0;
     padding: 5px;
     font-size: 1.05em;
+    font-family: "Roboto Mono", monospace;
 }
 
 .matrix-editor button {
@@ -303,6 +309,8 @@ svg {
 
 table {
     margin: auto;
+    position: relative;
+    padding: 0 40px 0 100px;
 }
 
 td {
@@ -319,6 +327,27 @@ th {
     line-height: 25px;
     text-wrap: nowrap;
     color: var(--text-color);
+    font-family: "Roboto Monospace", monospace;
+}
+
+.size {
+    position: absolute;
+    height: 25px;
+    left: -90px;
+    width: 80px;
+    text-align: right;
+    font-family: "Roboto Monospace", monospace;
+}
+
+.row-index {
+    position: absolute;
+    left: -25px;
+    height: 29px;
+    line-height: 29px;
+    width: 80px;
+    left: -90px;
+    text-align: right;
+    font-family: "Roboto Monospace", monospace;
 }
 
 .size-controller button {
@@ -341,12 +370,12 @@ th {
     display: flex;
     justify-content: center;
     margin-bottom: 10px;
-    margin-left: 9px;
 }
 
 .size-controller input {
     width: 50px;
     text-align: center;
+    font-family: "Roboto Monospace", monospace;
 }
 
 .row-count-caption,
