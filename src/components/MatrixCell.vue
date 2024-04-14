@@ -61,19 +61,24 @@ export default {
 
 <style scoped>
 td {
+    width: 35px;
     border: 2px solid var(--text-color);
 }
 
 @media screen and (min-width: 1000px) {
-    td input {
-        width: 55px;
-        font-size: 1.05em;
+    input {
+        width: 60px !important;
+        font-size: 1em !important;
+    }
+
+    td {
+        width: 60px !important;
     }
 }
 
 input {
-    width: 27px;
-    font-size: 0.95em;
+    width: 35px;
+    font-size: 0.8em;
     height: 27px;
     outline: none;
     text-align: center;
