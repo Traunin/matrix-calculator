@@ -1,23 +1,23 @@
 <template>
-    <nav>
-        <ul>
-            <li class="dropdown">
-                <router-link
-                    v-for="link in pages"
-                    :to="`/${link.link}`"
-                    active-class="active"
-                    >{{ link.name }} ▼</router-link
-                >
-                <div class="dropdown-content">
-                    <router-link
-                        v-for="link in pages"
-                        :to="`/${link.link}`"
-                        active-class="active"
-                        >{{ link.name }}</router-link
-                    >
-                </div>
-            </li>
-        </ul>
+    <nav
+        @mouseleave="menuShown = false"
+        @click="toggleMenu"
+        @mouseenter="
+            (e) => {
+                if (!e.sourceCapabilities.firesTouchEvents) {
+                    menuShown = true;
+                }
+            }
+        "
+        :class="{ menuShown: menuShown }"
+    >
+        <router-link
+            v-for="link in pages"
+            :to="`/${link.link}`"
+            class="link"
+            active-class="active"
+            >{{ link.name }}</router-link
+        >
     </nav>
 </template>
 
@@ -30,78 +30,67 @@ export default {
                 { name: "Решение системы методом Крамера", link: "solver" },
                 { name: "Умножить матрицы", link: "multiplier" },
                 { name: "Обратная матрица", link: "inverse" },
-                { name: "Решение системы методом обратной матрицы", link: "inverse_solver" },
+                {
+                    name: "Решение системы методом обратной матрицы",
+                    link: "inverse_solver",
+                },
             ],
+
+            menuShown: false,
         };
+    },
+
+    methods: {
+        toggleMenu() {
+            this.menuShown = !this.menuShown;
+        },
     },
 };
 </script>
 
 <style scoped>
-nav {
-    flex-grow: 1;
-    display: flex;
-    justify-content: flex-start;
-}
-a {
-    font-family: "Roboto", sans-serif;
-    color: var(--text-color);
-}
-.dropdown a {
+.link {
     display: none;
+    color: var(--text-color);
+    text-decoration: none;
+    font-family: "Roboto", sans-serif;
+    background: var(--secondary-color);
+    padding: 10px 10px;
+    font-size: 1.1em;
+    width: 100vw;
+    box-sizing: border-box;
+    text-align: center;
+    z-index: 1000;
 }
-.dropdown .active {
-    display: block;
+
+.menuShown .link {
+    display: inline-block;
 }
-ul {
+nav .active {
+    display: inline-block !important;
+    order: -1;
+    border-bottom: 3px solid var(--text-color);
+}
+nav {
     display: flex;
-    justify-content: center;
     flex-direction: column;
     align-items: stretch;
-}
-
-li {
-    float: left;
-}
-
-li a,
-.dropbtn {
-    display: inline-block;
-    text-align: center;
-    padding: 14px 16px;
-    text-decoration: none;
-}
-
-li a:hover,
-.dropdown:hover .dropbtn {
-    background-color: var(--accent-color);
-}
-
-li.dropdown {
-    display: inline-block;
-}
-
-.dropdown-content {
-    display: none;
     position: absolute;
-    min-width: 160px;
-    box-shadow: 0px 8px 16px 0px var(--shadow-color);
-    z-index: 1;
+    justify-content: flex-end;
+    top: 0;
+    left: 0;
 }
 
-.dropdown-content a {
-    padding: 12px 16px;
-    text-decoration: none;
-    display: block;
-    text-align: left;
-    background: var(--background-color);
+.link:hover {
+    background: var(--accent-color);
 }
 
-.dropdown-content a:hover {
-    background-color: #f1f1f1;
-}
-
-.dropdown:hover .dropdown-content {
-    display: block;
+@media screen and (min-width: 1000px) {
+    .link {
+        width: auto;
+        font-size: 1.3em;
+        text-align: left;
+        padding: 10px 20px;
+    }
 }
 </style>
