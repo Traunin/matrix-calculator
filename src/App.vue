@@ -51,19 +51,22 @@ function setTheme(themeToSet) {
 
 .matrix-ui {
     display: flex;
+    flex-direction: column;
     justify-content: flex-start;
-    align-items: self-start;
+    align-items: flex-start;
     flex-grow: 1;
     overflow: auto;
     box-sizing: border-box;
+    padding: 10px;
+    padding-top: 50px;
 }
-
-
 
 .dark {
     --text-color: #f5fcf6;
     --background-color: rgb(41, 41, 41);
     --input-background: #000;
+    --secondary-color: #69b5cb;
+    --accent-color: #94dada;
 }
 
 header {
@@ -105,6 +108,10 @@ header {
         flex-grow: 0;
         font-size: 1.3em;
         margin: 10px 50px;
+    }
+
+    .matrix-ui {
+        padding-top: 10px;
     }
 }
 </style>
