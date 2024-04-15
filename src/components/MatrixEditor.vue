@@ -243,9 +243,7 @@ watch(matrix, () => {
     flex-direction: column;
     justify-content: center;
     position: relative;
-    margin:  0 80px;
     flex: 0 0 auto;
-    flex-grow: 1;
 }
 
 .matrix-editor {
@@ -308,9 +306,8 @@ svg {
 }
 
 table {
-    margin: auto;
+    margin: 0 80px;
     position: relative;
-    padding: 0 40px 0 100px;
 }
 
 td {
@@ -370,6 +367,7 @@ th {
     display: flex;
     justify-content: center;
     margin-bottom: 10px;
+    margin-right: 25px;
 }
 
 .size-controller input {
