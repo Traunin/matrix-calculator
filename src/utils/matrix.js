@@ -151,7 +151,7 @@ export default class Matrix {
         if (this.isAugmented) {
             kVector = new Array(cols - 1).fill(0);
             for (let i = 0; i < rows; i++) {
-                const kValue = matrix[i][matrix[i].length-1];
+                const kValue = matrix[i][matrix[i].length - 1];
                 kVector[i] = kValue;
             }
         }
@@ -387,12 +387,20 @@ export default class Matrix {
             kVectorMatrix[i] = [this.kVector[i]];
         }
 
+        let solution = Matrix.multiplyMatrices(
+            kVectorMatrix,
+            inverseMatrixResult.inverseMatrix
+        );
+
+        let solutions = [];
+
+        for (let i = 0; i < solution.length; i++) {
+            solutions[i] = solution[i][0];
+        }
+
         return {
             determinant: inverseMatrixResult.determinant,
-            solution: Matrix.multiplyMatrices(
-                kVectorMatrix,
-                inverseMatrixResult.inverseMatrix
-            ),
+            solutions,
         };
     }
 }
