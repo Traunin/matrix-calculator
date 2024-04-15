@@ -12,14 +12,15 @@
                 ></matrix-editor>
             </div>
         </div>
-        <div class="determinant">
-            <button @click.prevent="findInverseMatrix">Найти обратную матрицу</button>
-            <div
-                class="error"
-                v-if="error"
-            >
-                Ошибка! Определитель равен нулю.
-            </div>
+        <button @click.prevent="findInverseMatrix">
+            Найти обратную матрицу
+        </button>
+
+        <div
+            class="error"
+            v-if="error"
+        >
+            Ошибка! Определитель равен нулю.
         </div>
     </div>
 </template>
