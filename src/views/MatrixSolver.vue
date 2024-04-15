@@ -1,5 +1,10 @@
 <template>
     <div class="calculator">
+        <matrix-editor
+            @update="solutionsFound = false"
+            :matrix="matrix"
+        ></matrix-editor>
+
         <button @click.prevent="getSolutions()">Найти корни системы</button>
         <div
             class="result"
@@ -9,21 +14,20 @@
                 v-if="determinant == 0"
                 class="error"
             >
-                Ошибка!
+                Ошибка! Определитель равен нулю.
             </div>
             <div
+                class="solutions"
                 v-if="determinant != 0"
-                class="solution"
-                v-for="(solution, index) in solutions"
             >
-                x<sub>{{ index + 1 }}</sub> = {{ solution }};&nbsp;
+                <div
+                    class="solution"
+                    v-for="(solution, index) in solutions"
+                >
+                    x<sub>{{ index + 1 }}</sub> = {{ solution }};&nbsp;
+                </div>
             </div>
         </div>
-
-        <matrix-editor
-            @update="solutionsFound = false"
-            :matrix="matrix"
-        ></matrix-editor>
     </div>
 </template>
 
@@ -51,10 +55,12 @@ function getSolutions() {
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    flex-grow: 1;
+    margin: auto;
 }
 
 button {
-    margin: 10px 20px;
+    margin: 20px;
     padding: 5px;
     font-size: 1em;
     display: inline-block;
@@ -70,7 +76,11 @@ button:hover {
     border-color: #94dada;
 }
 
-.result {
+.error {
+    color: red;
+}
+
+.result, .solutions {
     margin: 0 0 10px 0;
     display: inline-flex;
     flex-direction: row;
