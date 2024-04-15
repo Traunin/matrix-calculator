@@ -1,14 +1,5 @@
 <template>
     <div class="calculator">
-        <div class="determinant">
-            <button @click.prevent="findInverseMatrix">Обратная матрица</button>
-            <div
-                class="error"
-                v-if="error"
-            >
-                Определитель равен нулю!
-            </div>
-        </div>
         <div class="matrix-display">
             <matrix-editor :matrix="matrix"></matrix-editor>
             <div
@@ -19,6 +10,15 @@
                     :matrix="inverseMatrix"
                     :user-resizable="false"
                 ></matrix-editor>
+            </div>
+        </div>
+        <div class="determinant">
+            <button @click.prevent="findInverseMatrix">Обратная матрица</button>
+            <div
+                class="error"
+                v-if="error"
+            >
+                Ошибка! Определитель равен нулю.
             </div>
         </div>
     </div>
@@ -46,8 +46,8 @@ function findInverseMatrix() {
     if (determinant == 0) {
         error.value = true;
     } else {
-        inverseMatrix.setMatrix(result.inverseMatrix)
-        inverseMatrixCalculated.value = true
+        inverseMatrix.setMatrix(result.inverseMatrix);
+        inverseMatrixCalculated.value = true;
     }
 }
 </script>
@@ -58,10 +58,12 @@ function findInverseMatrix() {
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    flex-grow: 1;
+    margin: auto;
 }
 
 button {
-    margin: 10px 20px;
+    margin: 20px;
     padding: 5px;
     font-size: 1em;
     display: inline-block;
