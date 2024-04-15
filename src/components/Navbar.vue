@@ -16,8 +16,9 @@
             :to="`/${link.link}`"
             class="link"
             active-class="active"
-            >{{ link.name }}</router-link
-        >
+            >{{ link.name }}
+            <span class="dropdown-icon">▼</span>
+        </router-link>
     </nav>
 </template>
 
@@ -66,11 +67,22 @@ export default {
 .menuShown .link {
     display: inline-block;
 }
+
 nav .active {
     display: inline-block !important;
     order: -1;
     border-bottom: 3px solid var(--text-color);
 }
+
+.dropdown-icon {
+    display: none;
+}
+
+.active .dropdown-icon  {
+    display: inline-block;
+    margin-left: 10px;
+}
+
 nav {
     display: flex;
     flex-direction: column;
@@ -82,7 +94,7 @@ nav {
 }
 
 .link:hover {
-    background: var(--accent-color);
+    color: red;
 }
 
 @media screen and (min-width: 1000px) {
