@@ -64,7 +64,7 @@ function getSolutions() {
 }
 
 button {
-    margin: 10px 20px;
+    margin: 20px;
     padding: 5px;
     font-size: 1em;
     display: inline-block;
