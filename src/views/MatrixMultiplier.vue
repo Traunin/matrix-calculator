@@ -1,22 +1,21 @@
 <template>
     <div class="calculator">
-        <div class="col">
-            <div class="matrix-container">
-                <matrix-editor :matrix="matrix2"></matrix-editor>
-            </div>
+        <div class="matrix-container">
+            <matrix-editor :matrix="matrix2"></matrix-editor>
         </div>
 
-        <div class="col">
-            <div class="matrix-container">
-                <matrix-editor :matrix="matrix1"></matrix-editor>
-            </div>
+        <div class="matrix-container">
+            <matrix-editor :matrix="matrix1"></matrix-editor>
+        </div>
 
-            <div class="matrix-container">
-                <matrix-editor
-                    :matrix="matrix3"
-                    :user-resizable="false"
-                ></matrix-editor>
-            </div>
+        <div
+            class="matrix-container"
+            style="padding-top: 16px"
+        >
+            <matrix-editor
+                :matrix="matrix3"
+                :user-resizable="false"
+            ></matrix-editor>
         </div>
     </div>
 </template>
@@ -49,19 +48,26 @@ watch(matrix1, () => {
 <style scoped>
 .calculator {
     display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: flex-end;
-}
-
-.col {
-    display: inline-flex;
     flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    flex-grow: 1;
+    margin: auto;
 }
 
 .matrix-container {
-    margin: 10px;
-    display: inline-flex;
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
     justify-content: center;
+    flex-grow: 1;
+    padding: 10px;
+}
+
+@media screen and (min-width: 1000px) {
+    .calculator {
+        flex-direction: row;
+    }
 }
 </style>
