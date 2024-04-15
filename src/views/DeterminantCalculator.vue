@@ -38,10 +38,12 @@ function calculateDeterminant() {
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    flex-grow: 1;
+    margin: auto
 }
 
 button {
-    margin: 10px 20px;
+    margin: 20px;
     padding: 5px;
     font-size: 1em;
     display: inline-block;
