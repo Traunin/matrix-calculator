@@ -14,4 +14,4 @@ Multiplies two matrices
 Finds inverse matrix
 
 ### MatrixInverseSolver
-Uses reverse matrix to find solutions for systems of linear equations
+Uses inverse matrix to find solutions for systems of linear equations
