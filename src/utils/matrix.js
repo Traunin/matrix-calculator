@@ -151,7 +151,7 @@ export default class Matrix {
         if (this.isAugmented) {
             kVector = new Array(cols - 1).fill(0);
             for (let i = 0; i < rows; i++) {
-                const kValue = matrix[i].pop();
+                const kValue = matrix[i][matrix[i].length-1];
                 kVector[i] = kValue;
             }
         }
