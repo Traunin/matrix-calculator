@@ -13,7 +13,7 @@
             </div>
         </div>
         <div class="determinant">
-            <button @click.prevent="findInverseMatrix">Обратная матрица</button>
+            <button @click.prevent="findInverseMatrix">Найти обратную матрицу</button>
             <div
                 class="error"
                 v-if="error"
