@@ -2,12 +2,12 @@
     <div class="theme-switch">
         <input
             type="checkbox"
-            id="theme-switch"
+            id="theme-icon"
             v-model="isDark"
             @change="setTheme"
         /><label
-            for="theme-switch"
-            class="theme-switch"
+            for="theme-icon"
+            class="theme-icon"
         ></label>
     </div>
 </template>
@@ -44,7 +44,7 @@ function setTheme() {
 </script>
 
 <style scoped>
-label.theme-switch {
+label.theme-icon {
     display: inline-block;
     width: 25px;
     height: 25px;
@@ -65,12 +65,18 @@ label.theme-switch {
 }
 
 .theme-switch {
-    margin: 0 20px;
+    margin: 0 10px;
+    padding: 0 10px;
+    align-self: stretch;
+    border-left: var(--accent-color) 3px solid;
+    border-right: var(--accent-color) 3px solid;
+    display: flex;
+    align-items:center;
 }
 
 @media screen and (min-width: 1000px) {
     .theme-switch {
-        margin: 0 80px 0 20px;
+        margin: 0 70px 0 10px;
     }
 }
 </style>
