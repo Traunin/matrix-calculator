@@ -73,41 +73,42 @@
                 <button @click.prevent="addCol">+</button>
             </div>
         </div>
+        <div class="matrix-table">
+            <table>
+                <tr>
+                    <th class="size">
+                        {{ displayedRowCount }} x {{ displayedColCount }}
+                    </th>
+                    <th v-for="colIndex in displayedColCount">
+                        {{ colIndex }}
+                    </th>
 
-        <table>
-            <tr>
-                <th class="size">
-                    {{ displayedRowCount }} x {{ displayedColCount }}
-                </th>
-                <th v-for="colIndex in displayedColCount">
-                    {{ colIndex }}
-                </th>
+                    <th v-if="matrix.isAugmented">Доп.</th>
+                </tr>
+                <tr v-for="(row, rowIndex) in matrix.matrix">
+                    <td class="row-index">{{ rowIndex + 1 }}</td>
+                    <matrix-cell
+                        v-for="(value, colIndex) in row"
+                        :col-index="colIndex"
+                        :row-index="rowIndex"
+                        :matrix-id="id"
+                        :value="value == 0 ? 0 : value"
+                        @keypress="isNumber($event)"
+                        @input="(e) => updateCellValue(rowIndex, colIndex, e)"
+                    ></matrix-cell>
 
-                <th v-if="matrix.isAugmented">Доп.</th>
-            </tr>
-            <tr v-for="(row, rowIndex) in matrix.matrix">
-                <td class="row-index">{{ rowIndex + 1 }}</td>
-                <matrix-cell
-                    v-for="(value, colIndex) in row"
-                    :col-index="colIndex"
-                    :row-index="rowIndex"
-                    :matrix-id="id"
-                    :value="value == 0 ? 0 : value"
-                    @keypress="isNumber($event)"
-                    @input="(e) => updateCellValue(rowIndex, colIndex, e)"
-                ></matrix-cell>
-
-                <matrix-cell
-                    v-if="matrix.isAugmented"
-                    :col-index="matrix.colCount + 1"
-                    :row-index="rowIndex"
-                    :matrix-id="id"
-                    :value="matrix.kVector[rowIndex]"
-                    @keypress="isNumber($event)"
-                    @input="(e) => updateKVectorValue(rowIndex, e)"
-                ></matrix-cell>
-            </tr>
-        </table>
+                    <matrix-cell
+                        v-if="matrix.isAugmented"
+                        :col-index="matrix.colCount + 1"
+                        :row-index="rowIndex"
+                        :matrix-id="id"
+                        :value="matrix.kVector[rowIndex]"
+                        @keypress="isNumber($event)"
+                        @input="(e) => updateKVectorValue(rowIndex, e)"
+                    ></matrix-cell>
+                </tr>
+            </table>
+        </div>
     </div>
 </template>
 
@@ -310,6 +311,10 @@ table {
     position: relative;
 }
 
+.matrix-table {
+    margin: 0 auto;
+}
+
 td {
     text-align: center;
     color: var(--text-color);
@@ -398,5 +403,6 @@ th {
 .col-controller,
 .row-controller {
     margin: 0 5px;
+    width: 120px;
 }
 </style>
