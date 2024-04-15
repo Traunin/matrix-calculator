@@ -1,5 +1,10 @@
 <template>
     <div class="calculator">
+        <matrix-editor
+            @update="solutionsFound = false"
+            :matrix="matrix"
+        ></matrix-editor>
+
         <button @click.prevent="getSolutions()">Найти корни системы</button>
         <div
             class="result"
@@ -11,22 +16,19 @@
             >
                 Ошибка! Определитель равен нулю!
             </div>
+
             <div
+                class="solutions"
                 v-if="determinant != 0"
-                class="solution"
             >
-                <matrix-editor
-                    @update="solutionsFound = false"
-                    :matrix="solutionMatrix"
-                    :user-resizable="false"
-                ></matrix-editor>
+                <div
+                    class="solution"
+                    v-for="(solution, index) in solutions"
+                >
+                    x<sub>{{ index + 1 }}</sub> = {{ solution }};&nbsp;
+                </div>
             </div>
         </div>
-
-        <matrix-editor
-            @update="solutionsFound = false"
-            :matrix="matrix"
-        ></matrix-editor>
     </div>
 </template>
 
@@ -36,7 +38,7 @@ import Matrix from "@/utils/matrix";
 import { ref, reactive } from "vue";
 
 let matrix = reactive(new Matrix(4, 4, true, true));
-let solutionMatrix = reactive(new Matrix(4, 1, false, false));
+let solutions = ref([]);
 let solutionsFound = ref(false);
 let determinant = ref(0);
 
@@ -45,7 +47,7 @@ function getSolutions() {
 
     determinant.value = result.determinant;
     if (result.determinant != 0) {
-        solutionMatrix.setMatrix(result.solution)
+        solutions.value = result.solutions;
     }
     solutionsFound.value = true;
 }
@@ -57,6 +59,8 @@ function getSolutions() {
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    flex-grow: 1;
+    margin: auto;
 }
 
 button {
@@ -65,7 +69,7 @@ button {
     font-size: 1em;
     display: inline-block;
     background-color: #4bbf44;
-    color: black;
+    color: var(--text-color);
     border-radius: 5px;
     border: 3px solid #4bbf44;
     transition: all 0.1s;
@@ -76,7 +80,11 @@ button:hover {
     border-color: #94dada;
 }
 
-.result {
+.error {
+    color: red;
+}
+
+.result, .solutions {
     margin: 0 0 10px 0;
     display: inline-flex;
     flex-direction: row;
