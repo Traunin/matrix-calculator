@@ -403,4 +403,22 @@ export default class Matrix {
             solutions,
         };
     }
+
+    copyMatrix(matrix) {
+        let originalMatrix = matrix == undefined ? this.matrix : matrix;
+        let rows = originalMatrix.length;
+        if (rows == 0) return []
+        let cols = originalMatrix[0].length;
+
+        let matrixCopy = new Array(rows);
+
+        for (let i = 0; i < rows; i++) {
+            matrixCopy[i] = new Array(cols)
+            for (let j = 0; j < cols; j++) {
+                matrixCopy[i][j] = originalMatrix[i][j]
+            }
+        }
+
+        return matrixCopy;
+    }
 }
