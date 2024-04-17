@@ -26,7 +26,7 @@ onMounted(() => {
         ?.split("=")[1];
 
     if (theme.value == null) {
-        theme.value = window.matchMedia("prefers-color-scheme: dark").matches
+        theme.value = window.matchMedia("(prefers-color-scheme: dark)").matches
             ? "dark"
             : "light";
     }
@@ -71,7 +71,7 @@ label.theme-icon {
     border-left: var(--accent-color) 3px solid;
     border-right: var(--accent-color) 3px solid;
     display: flex;
-    align-items:center;
+    align-items: center;
 }
 
 @media screen and (min-width: 1000px) {
