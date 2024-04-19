@@ -4,6 +4,7 @@
             type="text"
             ref="input"
             inputmode="numeric"
+            autocomplete="off"
             v-model="displayedValue"
             :id="`cell-${matrixId}-${colIndex}-${rowIndex}`"
             @focus="selectAllText"
@@ -44,7 +45,9 @@ export default {
         },
 
         unsetNaN() {
-            this.displayedValue = this.value; // puts a zero when the cell is empty
+            this.displayedValue = parseFloat(this.displayedValue)
+                ? parseFloat(this.displayedValue)
+                : 0; // puts a zero when the cell is empty
         },
     },
 
