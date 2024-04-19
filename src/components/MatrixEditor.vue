@@ -173,11 +173,17 @@ function removeCol() {
 }
 
 function updateCellValue(rowIndex, colIndex, e) {
-    matrix.updateCellValue(rowIndex, colIndex, e);
+    let newValue = parseFloat(e.target.value);
+    if (!isNaN(newValue.toString())) {
+        matrix.updateCellValue(rowIndex, colIndex, newValue);
+    }
 }
 
 function updateKVectorValue(rowIndex, e) {
-    matrix.updateKVectorValue(rowIndex, e);
+    let newValue = parseFloat(e.target.value);
+    if (!isNaN(newValue.toString())) {
+        matrix.updateKVectorValue(rowIndex, newValue);
+    }
 }
 
 function openEditor() {

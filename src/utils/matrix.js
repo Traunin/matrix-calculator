@@ -108,12 +108,11 @@ export default class Matrix {
     }
 
     updateCellValue(rowIndex, colIndex, newValue) {
-        let newVal = parseFloat(newValue.target.value);
-        this.matrix[rowIndex][colIndex] = newVal ? newVal : 0;
+        this.matrix[rowIndex][colIndex] = newValue;
     }
 
     updateKVectorValue(rowIndex, newValue) {
-        this.kVector[rowIndex] = parseFloat(newValue.target.value);
+        this.kVector[rowIndex] = newValue;
     }
 
     updateMatrixFromString(newValue) {
