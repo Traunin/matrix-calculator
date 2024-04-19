@@ -150,7 +150,9 @@ export default class Matrix {
         if (this.isAugmented) {
             kVector = new Array(cols - 1).fill(0);
             for (let i = 0; i < rows; i++) {
-                const kValue = matrix[i][matrix[i].length - 1];
+                const kValue = this.isSquare
+                    ? matrix[i][matrix[i].length - 1]
+                    : matrix[i].pop();
                 kVector[i] = kValue;
             }
         }
