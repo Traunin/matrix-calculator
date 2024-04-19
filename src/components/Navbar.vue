@@ -35,6 +35,7 @@ export default {
                     name: "Решение системы методом обратной матрицы",
                     link: "inverse_solver",
                 },
+                { name: "Решение системы методом Гаусса", link: "gauss_solver" },
             ],
 
             menuShown: false,
@@ -78,7 +79,7 @@ nav .active {
     display: none;
 }
 
-.active .dropdown-icon  {
+.active .dropdown-icon {
     display: inline-block;
     margin-left: 10px;
 }

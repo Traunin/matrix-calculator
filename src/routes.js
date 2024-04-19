@@ -4,6 +4,7 @@ import MatrixSolver from "@/views/MatrixSolver.vue";
 import MatrixMultiplier from "@/views/MatrixMultiplier.vue";
 import MatrixInverse from "@/views/MatrixInverse.vue";
 import MatrixInverseSolver from "@/views/MatrixInverseSolver.vue";
+import MatrixGaussSolver from "@/views/MatrixGaussSolver.vue";
 
 const router = createRouter({
     history: createWebHashHistory(),
@@ -14,6 +15,7 @@ const router = createRouter({
         { path: "/multiplier", component: MatrixMultiplier },
         { path: "/inverse", component: MatrixInverse },
         { path: "/inverse_solver", component: MatrixInverseSolver },
+        { path: "/gauss_solver", component: MatrixGaussSolver },
     ],
 });
 

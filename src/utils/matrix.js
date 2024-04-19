@@ -422,4 +422,126 @@ export default class Matrix {
 
         return matrixCopy;
     }
+
+    solveWithGaussElimination() {
+        let { rowEchelonMatrix, rowEchelonkVector } =
+            this.convertMatrixToRowEchelonForm();
+        console.table(rowEchelonMatrix);
+        console.log(rowEchelonkVector);
+        this.convertToDiagonalFromRowEchelon(
+            rowEchelonMatrix,
+            rowEchelonkVector
+        );
+        console.table(rowEchelonMatrix);
+        console.log(rowEchelonkVector);
+    }
+
+    convertMatrixToRowEchelonForm(matrix, kVector) {
+        let rowEchelonMatrix = this.copyMatrix(matrix);
+        let rowEchelonkVector =
+            kVector == undefined ? [...this.kVector] : [...kVector];
+
+        let rows = rowEchelonMatrix.length;
+        let cols = rowEchelonMatrix[0].length;
+
+        let pivotNumberI = 0;
+        let pivotNumberJ = 0;
+
+        while (pivotNumberI < rows && pivotNumberJ < cols) {
+            // find a row with a maximum absolute value in the current column
+            let rowWithMaxNumber = pivotNumberI;
+            let maxNumber = Math.abs(
+                rowEchelonMatrix[pivotNumberI][pivotNumberJ]
+            );
+
+            for (let i = pivotNumberI + 1; i < rows; i++) {
+                let checkingNumber = Math.abs(
+                    rowEchelonMatrix[i][pivotNumberJ]
+                );
+                if (checkingNumber > maxNumber) {
+                    maxNumber = checkingNumber;
+                    rowWithMaxNumber = i;
+                }
+            }
+
+            if (Math.abs(maxNumber) <= Number.EPSILON) {
+                pivotNumberJ++;
+            } else {
+                // swap rows so that the one with the largest absolut value is at the top
+                if (rowWithMaxNumber != pivotNumberI) {
+                    for (let j = pivotNumberJ; j < cols; j++) {
+                        let temp = rowEchelonMatrix[rowWithMaxNumber][j];
+                        rowEchelonMatrix[rowWithMaxNumber][j] =
+                            rowEchelonMatrix[pivotNumberI][j];
+
+                        rowEchelonMatrix[pivotNumberI][j] = temp;
+                    }
+
+                    let temp = rowEchelonkVector[pivotNumberI];
+                    rowEchelonkVector[pivotNumberI] =
+                        rowEchelonkVector[rowWithMaxNumber];
+                    rowEchelonkVector[rowWithMaxNumber] = temp;
+                }
+
+                for (let i = pivotNumberI + 1; i < rows; i++) {
+                    let factor =
+                        rowEchelonMatrix[i][pivotNumberJ] /
+                        rowEchelonMatrix[pivotNumberI][pivotNumberJ];
+                    rowEchelonMatrix[i][pivotNumberJ] = 0;
+
+                    for (let j = pivotNumberJ + 1; j < cols; j++) {
+                        // subtract
+                        rowEchelonMatrix[i][j] =
+                            rowEchelonMatrix[i][j] -
+                            rowEchelonMatrix[pivotNumberI][j] * factor +
+                            Number.EPSILON;
+                    }
+
+                    rowEchelonkVector[i] =
+                        rowEchelonkVector[i] -
+                        rowEchelonkVector[pivotNumberI] * factor +
+                        Number.EPSILON;
+                }
+            }
+
+            pivotNumberI++;
+            pivotNumberJ++;
+        }
+
+        return { rowEchelonMatrix, rowEchelonkVector };
+    }
+
+    convertToDiagonalFromRowEchelon(matrix, kVector) {
+        let rows = matrix.length;
+        let cols = matrix[0].length;
+
+        for (let i = 1; i < Math.min(rows, cols); i++) {
+            if (Math.abs(matrix[i][i]) > Number.EPSILON) {
+                for (let j = i - 1; j >= 0; j--) {
+                    let factor = matrix[j][i] / matrix[i][i];
+                    kVector[j] =
+                        kVector[j] - kVector[i] * factor + Number.EPSILON;
+                    matrix[j][i] = 0;
+                    for (let k = i; k < cols; k++) {
+                        console.log(j, k);
+                        matrix[j][k] =
+                            matrix[j][k] -
+                            matrix[i][k] * factor +
+                            Number.EPSILON;
+                    }
+                }
+            }
+        }
+
+        for (let i = 0; i < Math.min(rows, cols); i++) {
+            if (Math.abs(matrix[i][i]) > Number.EPSILON) {
+                kVector[i] =
+                    Math.round(
+                        (kVector[i] / matrix[i][i] + Number.EPSILON) * 10000
+                    ) / 10000;
+
+                matrix[i][i] = 1;
+            }
+        }
+    }
 }
