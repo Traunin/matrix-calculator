@@ -423,43 +423,61 @@ export default class Matrix {
         return matrixCopy;
     }
 
+    roundToDecimalPlace(number, precision) {
+        return (
+            Math.round(
+                (number + Number.EPSILON * Math.sign(number)) * 10 ** precision
+            ) /
+            10 ** precision
+        );
+    }
+
     solveWithGaussElimination() {
         let { rowEchelonMatrix, rowEchelonkVector } =
             this.convertMatrixToRowEchelonForm();
-
+        console.table(rowEchelonMatrix);
+        console.log(rowEchelonkVector);
         this.convertToDiagonalFromRowEchelon(
             rowEchelonMatrix,
             rowEchelonkVector
         );
 
+        console.table(rowEchelonMatrix);
+        console.log(rowEchelonkVector);
         let rows = rowEchelonMatrix.length;
         let cols = rowEchelonMatrix[0].length;
 
         let roots = [];
 
         for (let i = 0; i < Math.min(rows, cols); i++) {
-            if (rowEchelonMatrix[i][i] <= Number.EPSILON) {
-                roots[i] = "R";
+            if (rowEchelonMatrix[i][i] <= Number.EPSILON * 100) {
+                roots[i] = { k: "R" };
                 continue;
             }
 
-            roots[i] = `${
-                Math.round(
-                    (rowEchelonkVector[i] +
-                        Number.EPSILON * Math.sign(rowEchelonkVector[i])) *
-                        10000
-                ) / 10000
-            }`;
+            roots[i] = {
+                k: `${this.roundToDecimalPlace(rowEchelonkVector[i], 4)}`,
+                rationalSubtracion: {},
+            };
 
             for (let j = i + 1; j < cols; j++) {
                 if (Math.abs(rowEchelonMatrix[i][j]) > Number.EPSILON) {
-                    roots[i] += `${-rowEchelonMatrix[i][j]}x<sub>${j}</sub>`;
+                    roots[i]["rationalSubtracion"][`${j + 1}`] =
+                        Math.sign(-rowEchelonMatrix[i][j]) == -1
+                            ? " - "
+                            : " + " +
+                              Math.abs(
+                                  this.roundToDecimalPlace(
+                                      rowEchelonMatrix[i][j],
+                                      4
+                                  )
+                              );
                 }
             }
         }
 
         for (let i = rows; i < cols; i++) {
-            roots[i] = "R";
+            roots[i] = { k: "R" };
         }
 
         return roots;
@@ -545,7 +563,7 @@ export default class Matrix {
         let cols = matrix[0].length;
 
         for (let i = 1; i < Math.min(rows, cols); i++) {
-            if (Math.abs(matrix[i][i]) > Number.EPSILON) {
+            if (Math.abs(matrix[i][i]) > Number.EPSILON * 100) {
                 for (let j = i - 1; j >= 0; j--) {
                     let factor = matrix[j][i] / matrix[i][i];
                     kVector[j] =
@@ -562,7 +580,7 @@ export default class Matrix {
         }
 
         for (let i = 0; i < Math.min(rows, cols); i++) {
-            if (Math.abs(matrix[i][i]) > Number.EPSILON) {
+            if (Math.abs(matrix[i][i]) > Number.EPSILON * 100) {
                 kVector[i] = kVector[i] / matrix[i][i];
                 matrix[i][i] = 1;
             }

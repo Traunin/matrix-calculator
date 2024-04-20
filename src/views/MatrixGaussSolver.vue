@@ -14,27 +14,30 @@
                 class="solution"
                 v-for="(solution, index) in solutions"
             >
-                x<sub>{{ index + 1 }}</sub> = {{ solution }};&nbsp;
+                x<sub>{{ index + 1 }}</sub
+                >{{ solution.k == "R" ? "∊ R" : " = " + solution.k
+                }}<span
+                    class="rational-subtraction"
+                    v-for="(subtracion, index) in solution.rationalSubtracion"
+                >
+                    {{ subtracion }}x<sub>{{ index }}</sub></span
+                >;&nbsp;
             </div>
         </div>
     </div>
 </template>
-
 <script setup>
 import MatrixEditor from "@/components/MatrixEditor.vue";
 import Matrix from "@/utils/matrix";
 import { ref, reactive } from "vue";
 
-let matrix = reactive(new Matrix(4, 4, false, true));
+let matrix = reactive(new Matrix(3, 3, false, true));
 let solutionsFound = ref(false);
 let solutions = ref([]);
-let determinant = ref(0);
 
 function getSolutions() {
-    let result = matrix.solveWithGaussElimination();
-    //solutions.value = result.solutions;
-    //determinant.value = result.determinant;
-    //solutionsFound.value = true;
+    solutions.value = matrix.solveWithGaussElimination();
+    solutionsFound.value = true;
 }
 </script>
 
@@ -65,12 +68,7 @@ button:hover {
     border-color: #94dada;
 }
 
-.error {
-    color: red;
-}
-
-.result,
-.solutions {
+.result {
     margin: 0 0 10px 0;
     display: inline-flex;
     flex-direction: row;
@@ -79,7 +77,7 @@ button:hover {
 }
 
 sub {
-    vertical-align: sub;
-    font-size: smaller;
+    vertical-align: sub !important;
+    font-size: smaller !important;
 }
 </style>
