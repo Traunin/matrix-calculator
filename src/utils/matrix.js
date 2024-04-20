@@ -452,10 +452,8 @@ export default class Matrix {
             }`;
 
             for (let j = i + 1; j < cols; j++) {
-                console.log(i,j)
                 if (Math.abs(rowEchelonMatrix[i][j]) > Number.EPSILON) {
                     roots[i] += `${-rowEchelonMatrix[i][j]}x<sub>${j}</sub>`;
-                    console.log(123)
                 }
             }
         }
