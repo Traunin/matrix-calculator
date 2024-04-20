@@ -426,14 +426,45 @@ export default class Matrix {
     solveWithGaussElimination() {
         let { rowEchelonMatrix, rowEchelonkVector } =
             this.convertMatrixToRowEchelonForm();
-        console.table(rowEchelonMatrix);
-        console.log(rowEchelonkVector);
+
         this.convertToDiagonalFromRowEchelon(
             rowEchelonMatrix,
             rowEchelonkVector
         );
-        console.table(rowEchelonMatrix);
-        console.log(rowEchelonkVector);
+
+        let rows = rowEchelonMatrix.length;
+        let cols = rowEchelonMatrix[0].length;
+
+        let roots = [];
+
+        for (let i = 0; i < Math.min(rows, cols); i++) {
+            if (rowEchelonMatrix[i][i] <= Number.EPSILON) {
+                roots[i] = "R";
+                continue;
+            }
+
+            roots[i] = `${
+                Math.round(
+                    (rowEchelonkVector[i] +
+                        Number.EPSILON * Math.sign(rowEchelonkVector[i])) *
+                        10000
+                ) / 10000
+            }`;
+
+            for (let j = i + 1; j < cols; j++) {
+                console.log(i,j)
+                if (Math.abs(rowEchelonMatrix[i][j]) > Number.EPSILON) {
+                    roots[i] += `${-rowEchelonMatrix[i][j]}x<sub>${j}</sub>`;
+                    console.log(123)
+                }
+            }
+        }
+
+        for (let i = rows; i < cols; i++) {
+            roots[i] = "R";
+        }
+
+        return roots;
     }
 
     convertMatrixToRowEchelonForm(matrix, kVector) {
@@ -522,8 +553,7 @@ export default class Matrix {
                     kVector[j] =
                         kVector[j] - kVector[i] * factor + Number.EPSILON;
                     matrix[j][i] = 0;
-                    for (let k = i; k < cols; k++) {
-                        console.log(j, k);
+                    for (let k = i + 1; k < cols; k++) {
                         matrix[j][k] =
                             matrix[j][k] -
                             matrix[i][k] * factor +
@@ -535,11 +565,7 @@ export default class Matrix {
 
         for (let i = 0; i < Math.min(rows, cols); i++) {
             if (Math.abs(matrix[i][i]) > Number.EPSILON) {
-                kVector[i] =
-                    Math.round(
-                        (kVector[i] / matrix[i][i] + Number.EPSILON) * 10000
-                    ) / 10000;
-
+                kVector[i] = kVector[i] / matrix[i][i];
                 matrix[i][i] = 1;
             }
         }
