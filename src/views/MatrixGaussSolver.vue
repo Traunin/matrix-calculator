@@ -15,13 +15,13 @@
                 v-for="(solution, index) in solutions"
             >
                 x<sub>{{ index + 1 }}</sub
-                >{{ solution.k == "R" ? "∊ R" : " = " + solution.k
+                >{{ solution.k == "R" ? " ∊ R" : " = " + solution.k
                 }}<span
                     class="rational-subtraction"
                     v-for="(subtracion, index) in solution.rationalSubtracion"
                 >
                     {{ subtracion }}x<sub>{{ index }}</sub></span
-                >;&nbsp;
+                >;<br>
             </div>
         </div>
     </div>
@@ -71,7 +71,7 @@ button:hover {
 .result {
     margin: 0 0 10px 0;
     display: inline-flex;
-    flex-direction: row;
+    flex-direction: column;
     font-size: 1em;
     font-family: "Roboto", sans-serif;
 }
