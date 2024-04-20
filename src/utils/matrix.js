@@ -435,15 +435,12 @@ export default class Matrix {
     solveWithGaussElimination() {
         let { rowEchelonMatrix, rowEchelonkVector } =
             this.convertMatrixToRowEchelonForm();
-        console.table(rowEchelonMatrix);
-        console.log(rowEchelonkVector);
+
         this.convertToDiagonalFromRowEchelon(
             rowEchelonMatrix,
             rowEchelonkVector
         );
 
-        console.table(rowEchelonMatrix);
-        console.log(rowEchelonkVector);
         let rows = rowEchelonMatrix.length;
         let cols = rowEchelonMatrix[0].length;
 
@@ -461,17 +458,14 @@ export default class Matrix {
             };
 
             for (let j = i + 1; j < cols; j++) {
-                if (Math.abs(rowEchelonMatrix[i][j]) > Number.EPSILON) {
+                if (Math.abs(rowEchelonMatrix[i][j]) > Number.EPSILON * 100) {
                     roots[i]["rationalSubtracion"][`${j + 1}`] =
-                        Math.sign(-rowEchelonMatrix[i][j]) == -1
+                        (Math.sign(-rowEchelonMatrix[i][j]) == -1
                             ? " - "
-                            : " + " +
-                              Math.abs(
-                                  this.roundToDecimalPlace(
-                                      rowEchelonMatrix[i][j],
-                                      4
-                                  )
-                              );
+                            : " + ") +
+                        Math.abs(
+                            this.roundToDecimalPlace(rowEchelonMatrix[i][j], 4)
+                        );
                 }
             }
         }
@@ -511,7 +505,7 @@ export default class Matrix {
                 }
             }
 
-            if (Math.abs(maxNumber) <= Number.EPSILON) {
+            if (Math.abs(maxNumber) <= Number.EPSILON * 100) {
                 pivotNumberJ++;
             } else {
                 // swap rows so that the one with the largest absolut value is at the top
@@ -582,6 +576,9 @@ export default class Matrix {
         for (let i = 0; i < Math.min(rows, cols); i++) {
             if (Math.abs(matrix[i][i]) > Number.EPSILON * 100) {
                 kVector[i] = kVector[i] / matrix[i][i];
+                for (let j = i + 1; j < cols; j++) {
+                    matrix[i][j] /= matrix[i][i];
+                }
                 matrix[i][i] = 1;
             }
         }
