@@ -459,13 +459,17 @@ export default class Matrix {
 
             for (let j = i + 1; j < cols; j++) {
                 if (Math.abs(rowEchelonMatrix[i][j]) > Number.EPSILON * 100) {
+                    let subtractionCoefficient = Math.abs(
+                        this.roundToDecimalPlace(rowEchelonMatrix[i][j], 4)
+                    );
+
                     roots[i]["rationalSubtracion"][`${j + 1}`] =
                         (Math.sign(-rowEchelonMatrix[i][j]) == -1
                             ? " - "
                             : " + ") +
-                        Math.abs(
-                            this.roundToDecimalPlace(rowEchelonMatrix[i][j], 4)
-                        );
+                        (subtractionCoefficient == 1
+                            ? ""
+                            : subtractionCoefficient);
                 }
             }
         }
