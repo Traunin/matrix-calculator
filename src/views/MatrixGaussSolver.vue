@@ -29,7 +29,7 @@
 <script setup>
 import MatrixEditor from "@/components/MatrixEditor.vue";
 import Matrix from "@/utils/matrix";
-import { ref, reactive } from "vue";
+import { ref, reactive, watch } from "vue";
 
 let matrix = reactive(new Matrix(3, 3, false, true));
 let solutionsFound = ref(false);
@@ -39,6 +39,10 @@ function getSolutions() {
     solutions.value = matrix.solveWithGaussElimination();
     solutionsFound.value = true;
 }
+
+watch(matrix, () => {
+    solutionsFound.value = false;
+});
 </script>
 
 <style scoped>
