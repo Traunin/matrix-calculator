@@ -454,7 +454,7 @@ export default class Matrix {
 
             roots[i] = {
                 k: `${this.roundToDecimalPlace(rowEchelonkVector[i], 4)}`,
-                rationalSubtracion: {},
+                rationalSubtraction: {},
             };
 
             for (let j = i + 1; j < cols; j++) {
@@ -463,7 +463,7 @@ export default class Matrix {
                         this.roundToDecimalPlace(rowEchelonMatrix[i][j], 4)
                     );
 
-                    roots[i]["rationalSubtracion"][`${j + 1}`] =
+                    roots[i]["rationalSubtraction"][`${j + 1}`] =
                         (Math.sign(-rowEchelonMatrix[i][j]) == -1
                             ? " - "
                             : " + ") +

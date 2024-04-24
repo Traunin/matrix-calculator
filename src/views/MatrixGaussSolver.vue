@@ -18,9 +18,9 @@
                 >{{ solution.k == "R" ? " ∊ R" : " = " + solution.k
                 }}<span
                     class="rational-subtraction"
-                    v-for="(subtracion, index) in solution.rationalSubtracion"
+                    v-for="(subtraction, index) in solution.rationalSubtraction"
                 >
-                    {{ subtracion }}x<sub>{{ index }}</sub></span
+                    {{ subtraction }}x<sub>{{ index }}</sub></span
                 >;<br>
             </div>
         </div>
