@@ -292,8 +292,8 @@ watch(matrix, () => {
     border-radius: 5px;
     padding: 5px;
     border: none;
-    background-color: #4bbf44;
-    border: 2px solid #4bbf44 !important;
+    background-color: var(--primary-color);
+    border: 2px solid var(--primary-color) !important;
     text-align: center;
     cursor: pointer;
     align-self: center;
@@ -364,7 +364,7 @@ th {
     height: 25px;
     border-radius: 5px;
     border: none;
-    background-color: #4bbf44;
+    background-color: var(--primary-color);
     text-align: center;
     cursor: pointer;
     color: var(--text-color);
