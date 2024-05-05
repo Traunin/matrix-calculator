@@ -130,10 +130,13 @@ export default class Matrix {
         }
         // Create a new 2D array for the matrix
         const matrix = [];
+        const parsedRows = [];
         // Parse the text and populate the matrix
         for (let i = 0; i < rows; i++) {
             matrix[i] = [];
+            
             const rowValues = lines[i].trim().split(/\s+/).map(parseFloat);
+            parsedRows[i] = rowValues
             for (let j = 0; j < cols; j++) {
                 matrix[i][j] = rowValues[j] || 0; // fill with 0 if no value
             }
@@ -144,14 +147,13 @@ export default class Matrix {
                 }
             }
         }
-
         // If isAugmented is true, calculate the kVector
         let kVector = null;
         if (this.isAugmented) {
             kVector = new Array(cols - 1).fill(0);
             for (let i = 0; i < rows; i++) {
                 const kValue = this.isSquare
-                    ? matrix[i][matrix[i].length - 1]
+                    ? parsedRows[i][matrix.length]
                     : matrix[i].pop();
                 kVector[i] = kValue;
             }
