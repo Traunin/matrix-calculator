@@ -313,8 +313,7 @@ svg {
 }
 
 table {
-    margin: 0 80px;
-    position: relative;
+    margin-right: 80px;
 }
 
 .matrix-table {
@@ -339,19 +338,17 @@ th {
 }
 
 .size {
-    position: absolute;
     height: 25px;
-    left: -90px;
+    padding-right: 10px;
     width: 80px;
     text-align: right;
     font-family: "Roboto Monospace", monospace;
 }
 
 .row-index {
-    position: absolute;
-    left: -25px;
     height: 29px;
     line-height: 29px;
+    padding-right: 10px !important;
     width: 80px;
     left: -90px;
     text-align: right;
