@@ -36,6 +36,7 @@ export default {
                     link: "inverse_solver",
                 },
                 { name: "Решение системы методом Гаусса", link: "gauss_solver" },
+                { name: "Нахождение собственного вектора", link: "eigenvector" },
             ],
 
             menuShown: false,

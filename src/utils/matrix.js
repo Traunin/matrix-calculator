@@ -1,5 +1,11 @@
 export default class Matrix {
-    constructor(rowCount, colCount, isSquare = false, isAugmented = false) {
+    constructor(
+        rowCount,
+        colCount,
+        isSquare = false,
+        isAugmented = false,
+        matrix
+    ) {
         this.rowCount = rowCount;
         this.colCount = colCount;
         this.isSquare = isSquare;
@@ -12,6 +18,10 @@ export default class Matrix {
 
         for (let i = 0; i < rowCount; i++) {
             this.matrix[i] = new Array(colCount).fill(0);
+        }
+
+        if (matrix != undefined) {
+            this.matrix = matrix;
         }
     }
 
@@ -117,7 +127,7 @@ export default class Matrix {
 
     updateMatrixFromString(newValue) {
         // Split the text into lines
-        const lines = newValue.trim().split("\n");
+        const lines = newValue.trim().split('\n');
         // Determine the dimensions of the matrix
         const rows = lines.length;
         let cols = this.isSquare ? rows : 0;
@@ -134,9 +144,9 @@ export default class Matrix {
         // Parse the text and populate the matrix
         for (let i = 0; i < rows; i++) {
             matrix[i] = [];
-            
+
             const rowValues = lines[i].trim().split(/\s+/).map(parseFloat);
-            parsedRows[i] = rowValues
+            parsedRows[i] = rowValues;
             for (let j = 0; j < cols; j++) {
                 matrix[i][j] = rowValues[j] || 0; // fill with 0 if no value
             }
@@ -163,23 +173,23 @@ export default class Matrix {
     }
 
     getMatrixAsString() {
-        let string = "";
+        let string = '';
 
         for (let i = 0; i < this.rowCount; i++) {
             for (let j = 0; j < this.colCount; j++) {
                 string += this.matrix[i][j];
                 if (j < this.colCount - 1) {
-                    string += " ";
+                    string += ' ';
                 }
             }
 
             if (this.isAugmented) {
-                string += " ";
+                string += ' ';
                 string += this.kVector[i];
             }
 
             if (i < this.rowCount - 1) {
-                string += "\n";
+                string += '\n';
             }
         }
 
@@ -450,7 +460,7 @@ export default class Matrix {
 
         for (let i = 0; i < Math.min(rows, cols); i++) {
             if (rowEchelonMatrix[i][i] <= Number.EPSILON * 100) {
-                roots[i] = { k: "R" };
+                roots[i] = { k: 'R' };
                 continue;
             }
 
@@ -465,19 +475,19 @@ export default class Matrix {
                         this.roundToDecimalPlace(rowEchelonMatrix[i][j], 4)
                     );
 
-                    roots[i]["rationalSubtraction"][`${j + 1}`] =
+                    roots[i]['rationalSubtraction'][`${j + 1}`] =
                         (Math.sign(-rowEchelonMatrix[i][j]) == -1
-                            ? " - "
-                            : " + ") +
+                            ? ' - '
+                            : ' + ') +
                         (subtractionCoefficient == 1
-                            ? ""
+                            ? ''
                             : subtractionCoefficient);
                 }
             }
         }
 
         for (let i = rows; i < cols; i++) {
-            roots[i] = { k: "R" };
+            roots[i] = { k: 'R' };
         }
 
         return roots;
@@ -588,5 +598,50 @@ export default class Matrix {
                 matrix[i][i] = 1;
             }
         }
+    }
+
+    getEigenvector() {
+        let eigenVectors = [];
+        let eigenvectorCount = this.rowCount;
+
+        for (let i = 0; i < eigenvectorCount; i++) {
+            let vector = new Array(eigenvectorCount);
+            for (let j = 0; j < eigenvectorCount; j++) {
+                vector[j] = [Math.random()];
+            }
+
+            for (let j = 0; j < 20; j++) {
+                vector = Matrix.multiplyMatrices(vector, this.matrix);
+                vector = this.normalizeVector(vector);
+            }
+
+            let isPresent = false;
+            for (let j = 0; j < eigenVectors; j++) {
+                let equals = true;
+                for (let k = 0; k < vector.length; ++k) {
+                    if (vector[j][0] !== eigenVectors[i][0]) equals = false;
+                    break;
+                }
+                if (equals) {
+                    isPresent = true;
+                    break;
+                }
+            }
+
+            if (!isPresent) {
+                eigenVectors.push(vector);
+            }
+        }
+
+        return eigenVectors;
+    }
+
+    normalizeVector(vector) {
+        let sum = 0
+        for (let i = 0; i < vector.length; i++) {
+            sum += vector[i]*vector[i]
+        }
+        let norm = Math.sqrt(sum);
+        return vector.map((val) => [(Math.round((val[0] / norm))*10000)/10000]);
     }
 }
