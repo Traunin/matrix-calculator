@@ -1,3 +1,4 @@
+var Algebrite = require('algebrite');
 export default class Matrix {
     constructor(
         rowCount,
@@ -601,47 +602,6 @@ export default class Matrix {
     }
 
     getEigenvector() {
-        let eigenVectors = [];
-        let eigenvectorCount = this.rowCount;
-
-        for (let i = 0; i < eigenvectorCount; i++) {
-            let vector = new Array(eigenvectorCount);
-            for (let j = 0; j < eigenvectorCount; j++) {
-                vector[j] = [Math.random()];
-            }
-
-            for (let j = 0; j < 20; j++) {
-                vector = Matrix.multiplyMatrices(vector, this.matrix);
-                vector = this.normalizeVector(vector);
-            }
-
-            let isPresent = false;
-            for (let j = 0; j < eigenVectors; j++) {
-                let equals = true;
-                for (let k = 0; k < vector.length; ++k) {
-                    if (vector[j][0] !== eigenVectors[i][0]) equals = false;
-                    break;
-                }
-                if (equals) {
-                    isPresent = true;
-                    break;
-                }
-            }
-
-            if (!isPresent) {
-                eigenVectors.push(vector);
-            }
-        }
-
-        return eigenVectors;
-    }
-
-    normalizeVector(vector) {
-        let sum = 0
-        for (let i = 0; i < vector.length; i++) {
-            sum += vector[i]*vector[i]
-        }
-        let norm = Math.sqrt(sum);
-        return vector.map((val) => [(Math.round((val[0] / norm))*10000)/10000]);
+        console.log(Algebrite.factor('10!').toString())
     }
 }
