@@ -1,17 +1,21 @@
 # Matrix calculator
 This project features multiple calculators useful when working with matrices
 
-### DeterminantCalculator
+## Features
+### Determinant calculator
 Uses recursion in order to calculate determinant for square matrices
 
-### MatrixSolver
+### Cramer's method linear system solver
 Uses Cramer's method to find solutions for systems of linear equations
 
-### MatrixMultiplier
+### Matrix multiplier
 Multiplies two matrices
 
-### InverseMatrix
+### Inverse matrix finder
 Finds inverse matrix
 
-### MatrixInverseSolver
+### Inverse matrix linear system solver
 Uses inverse matrix to find solutions for systems of linear equations
+
+### Gaussian elimination linear system solver
+Solves linear systems using gaussian elimination. The **fastest of solvers**, can solve matrices of any shape and shows free variables
