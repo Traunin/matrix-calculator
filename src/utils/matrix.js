@@ -618,7 +618,6 @@ export default class Matrix {
                 //console.log(`vector${i}`, [...vector].toString())
             }
 
-
             let isPresent = false;
             for (let j = 0; j < eigenVectors; j++) {
                 let equals = true;
@@ -637,21 +636,56 @@ export default class Matrix {
             }
         }
 
-        return eigenVectors;
+        let eigenpairs = [];
+        for (let i = 0; i < eigenVectors.length; i++) {
+            let scalingFactor = eigenVectors[i][0];
+            let maxIndex = 0;
+            for (let j = 1; j < eigenVectors[0].length; j++) {
+                if (scalingFactor < eigenVectors[i][j][0]) {
+                    scalingFactor = eigenVectors[i][j][0];
+                    maxIndex = j;
+                }
+            }
+
+            for (let j = 0; j < eigenVectors[0].length; j++) {
+                eigenVectors[i][j][0] = this.roundToDecimalPlace(
+                    eigenVectors[i][j][0] / scalingFactor,
+                    4
+                );
+            }
+
+            let multipliedVector = Matrix.multiplyMatrices(
+                eigenVectors[i],
+                this.matrix
+            );
+            
+            let eigenvalue =
+                scalingFactor == 0
+                    ? 'R'
+                    : this.roundToDecimalPlace(
+                          multipliedVector[maxIndex][0] /
+                              eigenVectors[i][maxIndex][0],
+                          4
+                      );
+
+            eigenpairs.push({ eigenvalue, eigenvector: eigenVectors[i] });
+        }
+
+        return eigenpairs;
     }
 
     normalizeVector(vector) {
-        let sum = 0
+        let sum = 0;
         for (let i = 0; i < vector.length; i++) {
-            sum += vector[i]*vector[i]
+            sum += vector[i] * vector[i];
         }
         let norm = Math.sqrt(sum);
         if (norm < Number.EPSILON * 100) {
-            norm = 1
+            norm = 1;
         }
-        let normalisedVector = new Array(vector.length)
+        let normalisedVector = new Array(vector.length);
         for (let i = 0; i < vector.length; i++) {
-            normalisedVector[i] = [vector[i][0]/norm]
+            normalisedVector[i] = [vector[i][0] / norm];
         }
         return normalisedVector;
     }
