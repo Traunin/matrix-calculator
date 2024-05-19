@@ -647,12 +647,12 @@ export default class Matrix {
                 }
             }
 
-            // for (let j = 0; j < eigenVectors[0].length; j++) {
-            //     eigenVectors[i][j][0] = this.roundToDecimalPlace(
-            //         eigenVectors[i][j][0] / scalingFactor,
-            //         4
-            //     );
-            // }
+            for (let j = 0; j < eigenVectors[0].length; j++) {
+                eigenVectors[i][j][0] = this.roundToDecimalPlace(
+                    eigenVectors[i][j][0],
+                    4
+                );
+            }
 
             let multipliedVector = Matrix.multiplyMatrices(
                 eigenVectors[i],
