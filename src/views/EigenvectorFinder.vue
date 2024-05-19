@@ -1,26 +1,42 @@
 <template>
     <div class="calculator">
         <matrix-editor
-            @update="solutionsFound = false; console.log(123)"
+            @update="
+                solutionsFound = false;
+            "
             :matrix="matrix"
         ></matrix-editor>
 
-        <div class="eigenVectors" v-if="solutionsFound">
-            <matrix-editor
-                v-for = "vector in result"
-                @update="solutionsFound = false"
-                :user-resizable="false"
-                :matrix="new Matrix(matrix.rowCount, 1, false, false, vector)"
-            ></matrix-editor>
+        <div
+            class="eigenpairs"
+            v-if="solutionsFound"
+        >
+            <div
+                class="eigenpair"
+                v-for="(eigenPair, index) in result"
+            >
+                <div class="eigenvalue">
+                    𝜆 = {{ eigenPair.eigenvalue }}
+                </div>
+                <div class="eigenvector">
+                    <div
+                        class="coefficient"
+                        v-for="coefficient in eigenPair.eigenvector"
+                        v-html="wrapIndex(coefficient)"
+                    ></div>
+                </div>
+            </div>
         </div>
-        <button @click.prevent="getEigenvector()">Найти собственный вектор/значение</button>
+        <button @click.prevent="getEigenvector()">
+            Найти собственный вектор/значение
+        </button>
     </div>
 </template>
 
 <script setup>
-import MatrixEditor from "@/components/MatrixEditor.vue";
-import Matrix from "@/utils/matrix";
-import { ref, reactive, watch } from "vue";
+import MatrixEditor from '@/components/MatrixEditor.vue';
+import Matrix from '@/utils/matrix';
+import { ref, reactive, watch } from 'vue';
 
 let matrix = reactive(new Matrix(3, 3, true, false));
 let solutionsFound = ref(false);
@@ -29,6 +45,10 @@ let result = ref([]);
 function getEigenvector() {
     result.value = [...matrix.getEigenvector()];
     solutionsFound.value = true;
+}
+
+function wrapIndex(str) {
+    return str.toString().replace(/x(\d+)/g, 'x<sub>$1</sub>');
 }
 
 watch(matrix, () => {
@@ -67,16 +87,29 @@ button:hover {
     color: red;
 }
 
-.result, .solutions {
+.result,
+.solutions {
     margin: 0 0 10px 0;
     display: inline-flex;
     flex-direction: row;
     font-size: 1em;
-    font-family: "Roboto", sans-serif;
+    font-family: 'Roboto', sans-serif;
 }
 
-sub {
-    vertical-align: sub;
-    font-size: smaller;
+.eigenpairs {
+    display: flex;
+    flex-direction: row;
+    font-size: 1em;
+    font-family: 'Roboto', sans-serif;
+    display: inline-flex;
+    gap: 20px;
+    margin-top: 20px;
 }
+
+.eigenpair, .eigenvector {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+} 
 </style>

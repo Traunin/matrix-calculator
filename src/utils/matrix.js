@@ -589,7 +589,7 @@ export default class Matrix {
                 }
             }
         }
-
+        //console.log(matrix)
         for (let i = 0; i < Math.min(rows, cols); i++) {
             if (Math.abs(matrix[i][i]) > Number.EPSILON * 100) {
                 kVector[i] = kVector[i] / matrix[i][i];
@@ -602,6 +602,167 @@ export default class Matrix {
     }
 
     getEigenvector() {
-        console.log(Algebrite.factor('10!').toString())
+        let eigenvalues = this.getEigenvectorEquation();
+        let eigenvectors = [];
+        eigenvalues.forEach((eigenvalue) =>
+            eigenvectors.push(this.getEigenvectorFromEigenvalue(eigenvalue))
+        );
+        let eigenpairs = [];
+        for (let i = 0; i < eigenvectors.length; i++) {
+            eigenpairs.push({
+                eigenvalue: eigenvalues[i],
+                eigenvector: eigenvectors[i],
+            });
+        }
+        return eigenpairs;
+    }
+
+    getEigenvectorEquation() {
+        let stringMatrix = this.getAlphaStringsMatrix(this.matrix);
+        let determinatEquation = this.getDeterminantFormula(
+            stringMatrix,
+            stringMatrix.length
+        );
+        //console.log(determinatEquation);
+        //console.log(Algebrite.simplify(determinatEquation).toString())
+        let eigenvalues = Algebrite.roots(Algebrite.simplify(determinatEquation))
+            .toString()
+            .replace(/[\[\]]|\.\.\./g, '')
+            .split(',');
+        console.log("before", eigenvalues)
+        //get rid of complex roots
+        return eigenvalues.filter((val) => val.indexOf('i') == -1);
+    }
+
+    getDeterminantFormula(matrix, order) {
+        if (order == 1) {
+            return matrix[0][0];
+        } else if (order == 2) {
+            return `${matrix[0][0]}*${matrix[1][1]}-${matrix[1][0]}*${matrix[0][1]}`;
+        } else if (order == 3) {
+            return `${matrix[0][0]} * ${matrix[1][1]} * ${matrix[2][2]} - ${matrix[0][0]} * ${matrix[1][2]} * ${matrix[2][1]} - ${matrix[0][1]} * ${matrix[1][0]} * ${matrix[2][2]} + ${matrix[0][1]} * ${matrix[1][2]} * ${matrix[2][0]} + ${matrix[0][2]} * ${matrix[1][0]} * ${matrix[2][1]} - ${matrix[0][2]} * ${matrix[1][1]} * ${matrix[2][0]}`;
+        }
+
+        let lowerOrderMatrix = [];
+        // copying the array without the first row and the first column
+        for (let i = 0; i < order - 1; i++) {
+            lowerOrderMatrix[i] = [];
+            for (let j = 0; j < order - 1; j++) {
+                lowerOrderMatrix[i][j] = matrix[i + 1][j + 1];
+            }
+        }
+
+        let subtraction = -1; // adding or subtracting based on the `
+        let determinant = `${matrix[0][0]} * (${this.getDeterminantFormula(
+            lowerOrderMatrix,
+            order - 1
+        )})`;
+        //console.log(this.calculateDeterminant(lowerOrderMatrix, order - 1))
+
+        // shifting the excluded row
+        for (let i = 0; i < order - 1; i++) {
+            for (let j = 0; j < order - 1; j++) {
+                lowerOrderMatrix[i][j] = matrix[i][j + 1];
+            }
+            determinant +=
+                (subtraction == 1 ? '+' : '-') +
+                `${matrix[i + 1][0]} * (${this.getDeterminantFormula(
+                    lowerOrderMatrix,
+                    order - 1
+                )})`;
+            subtraction = -subtraction;
+        }
+
+        return determinant;
+    }
+
+    getAlphaStringsMatrix(matrix) {
+        let matrixSize = matrix.length;
+        let stringMatrix = new Array(matrixSize);
+        for (let i = 0; i < matrixSize; i++) {
+            stringMatrix[i] = new Array(matrixSize);
+
+            for (let j = 0; j < matrixSize; j++) {
+                if (i == j) {
+                    stringMatrix[i][j] = `(${this.floatToDivisionString(
+                        matrix[i][j]
+                    )}-x)`;
+                } else {
+                    stringMatrix[i][j] = `${this.floatToDivisionString(
+                        matrix[i][j]
+                    )}`;
+                }
+            }
+        }
+
+        return stringMatrix;
+    }
+
+    countDecimals(value) {
+        if (value % 1 != 0) return value.toString().split('.')[1].length;
+        return 0;
+    }
+
+    floatToDivisionString(value) {
+        let decimalPlaces = this.countDecimals(value);
+        if (decimalPlaces == 0) {
+            return `(${value})`;
+        }
+        let factor = 10 ** decimalPlaces;
+        return `(${value * factor}/${factor})`;
+    }
+
+    getEigenvectorFromEigenvalue(eigenvalue) {
+        eigenvalue = parseFloat(eigenvalue);
+        let size = this.matrix.length;
+        let matrixForSubtraction = this.copyMatrix(this.matrix);
+        for (let i = 0; i < size; i++) {
+            matrixForSubtraction[i][i] -= eigenvalue;
+        }
+        let rowEchelonForm = this.convertMatrixToRowEchelonForm(
+            matrixForSubtraction,
+            new Array(size).fill(0)
+        );
+        let diagonalForm = this.convertToDiagonalFromRowEchelon(
+            rowEchelonForm.rowEchelonMatrix,
+            new Array(size).fill(0)
+        );
+
+        console.log(eigenvalue, rowEchelonForm);
+        return this.parseMatrixIntoEigenvector(rowEchelonForm.rowEchelonMatrix);
+    }
+
+    parseMatrixIntoEigenvector(rowEchelonMatrix) {
+        let size = rowEchelonMatrix.length;
+        let eigenvectorComponents = [];
+
+        for (let i = 0; i < size; i++) {
+            if (rowEchelonMatrix[i][i] <= Number.EPSILON * 100) {
+                eigenvectorComponents[i] = [`x${i + 1}`];
+                continue;
+            }
+            let eigenvectorComponent = '';
+
+            for (let j = i + 1; j < size; j++) {
+                if (Math.abs(rowEchelonMatrix[i][j]) > Number.EPSILON * 100) {
+                    let subtractionCoefficient = Math.abs(
+                        this.roundToDecimalPlace(rowEchelonMatrix[i][j], 4)
+                    );
+
+                    eigenvectorComponent +=
+                        (Math.sign(-rowEchelonMatrix[i][j]) == -1
+                            ? ' - '
+                            : ' + ') +
+                        (subtractionCoefficient == 1
+                            ? ''
+                            : subtractionCoefficient) +
+                        `x${j + 1}`;
+                }
+            }
+            console.log(eigenvectorComponent);
+            eigenvectorComponent = eigenvectorComponent.substring(3);
+            eigenvectorComponents[i] = [eigenvectorComponent];
+        }
+        return eigenvectorComponents;
     }
 }
