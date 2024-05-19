@@ -607,7 +607,7 @@ export default class Matrix {
         for (let i = 0; i < eigenvectorCount; i++) {
             let vector = new Array(eigenvectorCount);
             for (let j = 0; j < eigenvectorCount; j++) {
-                vector[j] = [Math.random()];
+                vector[j] = [j==i ? 1:0];
             }
 
             for (let j = 0; j < 20; j++) {
