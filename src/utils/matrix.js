@@ -760,7 +760,16 @@ export default class Matrix {
                 }
             }
             console.log(eigenvectorComponent);
-            eigenvectorComponent = eigenvectorComponent.substring(3);
+            //eigenvectorComponent = eigenvectorComponent.substring(3);
+            if (eigenvectorComponent.charAt(1) == "-" && eigenvectorComponent.charAt(2)==" ") {
+                eigenvectorComponent = eigenvectorComponent.replace(" - ", "-");
+            }
+
+            if (eigenvectorComponent.charAt(1) == "+" && eigenvectorComponent.charAt(2)==" ") {
+                eigenvectorComponent = eigenvectorComponent.replace(" + ", "");
+            }
+
+            eigenvectorComponent = eigenvectorComponent ? eigenvectorComponent : "0"
             eigenvectorComponents[i] = [eigenvectorComponent];
         }
         return eigenvectorComponents;
