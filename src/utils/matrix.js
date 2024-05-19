@@ -607,13 +607,17 @@ export default class Matrix {
         for (let i = 0; i < eigenvectorCount; i++) {
             let vector = new Array(eigenvectorCount);
             for (let j = 0; j < eigenvectorCount; j++) {
-                vector[j] = [j==i ? 1:0];
+                vector[j] = [Math.random()];
+            }
+            //console.log(`vector${i}`, [...vector].toString())
+
+            for (let j = 0; j < 100; j++) {
+                vector = Matrix.multiplyMatrices(vector, this.matrix);
+                //console.log(`vector${i}`, [...vector].toString())
+                vector = this.normalizeVector(vector);
+                //console.log(`vector${i}`, [...vector].toString())
             }
 
-            for (let j = 0; j < 20; j++) {
-                vector = Matrix.multiplyMatrices(vector, this.matrix);
-                vector = this.normalizeVector(vector);
-            }
 
             let isPresent = false;
             for (let j = 0; j < eigenVectors; j++) {
@@ -642,6 +646,13 @@ export default class Matrix {
             sum += vector[i]*vector[i]
         }
         let norm = Math.sqrt(sum);
-        return vector.map((val) => [(Math.round((val[0] / norm))*10000)/10000]);
+        if (norm < Number.EPSILON * 100) {
+            norm = 1
+        }
+        let normalisedVector = new Array(vector.length)
+        for (let i = 0; i < vector.length; i++) {
+            normalisedVector[i] = [vector[i][0]/norm]
+        }
+        return normalisedVector;
     }
 }
