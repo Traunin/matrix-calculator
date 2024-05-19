@@ -1,9 +1,7 @@
 <template>
     <div class="calculator">
         <matrix-editor
-            @update="
-                solutionsFound = false;
-            "
+            @update="solutionsFound = false"
             :matrix="matrix"
         ></matrix-editor>
 
@@ -15,9 +13,7 @@
                 class="eigenpair"
                 v-for="(eigenPair, index) in result"
             >
-                <div class="eigenvalue">
-                    𝜆 = {{ eigenPair.eigenvalue }}
-                </div>
+                <div class="eigenvalue">𝜆 = {{ eigenPair.eigenvalue }}</div>
                 <div class="eigenvector">
                     <div
                         class="coefficient"
@@ -106,10 +102,29 @@ button:hover {
     margin-top: 20px;
 }
 
-.eigenpair, .eigenvector {
+.eigenpair,
+.eigenvector {
     display: flex;
     flex-direction: column;
-    align-items: center;
-    gap: 3px;
-} 
+    align-items: stretch;
+    text-align: center;
+}
+
+.eigenpair {
+    gap: 5px;
+}
+
+.coefficient {
+    border-right: 3px solid var(--text-color);
+    border-left: 3px solid var(--text-color);
+    padding: 5px;
+}
+
+.coefficient:first-child {
+    border-radius: 10px 10px 0 0;
+}
+
+.coefficient:last-child {
+    border-radius: 0 0 10px 10px;
+}
 </style>
