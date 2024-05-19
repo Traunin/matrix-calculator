@@ -611,7 +611,7 @@ export default class Matrix {
             }
             //console.log(`vector${i}`, [...vector].toString())
 
-            for (let j = 0; j < 100; j++) {
+            for (let j = 0; j < 200; j++) {
                 vector = Matrix.multiplyMatrices(vector, this.matrix);
                 //console.log(`vector${i}`, [...vector].toString())
                 vector = this.normalizeVector(vector);
@@ -647,18 +647,18 @@ export default class Matrix {
                 }
             }
 
-            for (let j = 0; j < eigenVectors[0].length; j++) {
-                eigenVectors[i][j][0] = this.roundToDecimalPlace(
-                    eigenVectors[i][j][0] / scalingFactor,
-                    4
-                );
-            }
+            // for (let j = 0; j < eigenVectors[0].length; j++) {
+            //     eigenVectors[i][j][0] = this.roundToDecimalPlace(
+            //         eigenVectors[i][j][0] / scalingFactor,
+            //         4
+            //     );
+            // }
 
             let multipliedVector = Matrix.multiplyMatrices(
                 eigenVectors[i],
                 this.matrix
             );
-            
+
             let eigenvalue =
                 scalingFactor == 0
                     ? 'R'
