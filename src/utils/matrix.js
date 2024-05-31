@@ -239,7 +239,7 @@ export default class Matrix {
             }
         }
 
-        let subtraction = -1; // adding or subtracting based on the `
+        let subtraction = -1; // adding or subtracting based on the position in the matrix
         let determinant =
             matrix[0][0] *
             this.calculateDeterminant(lowerOrderMatrix, order - 1);
@@ -652,7 +652,7 @@ export default class Matrix {
             }
         }
 
-        let subtraction = -1; // adding or subtracting based on the `
+        let subtraction = -1; // adding or subtracting based on the position in the matrix
         let determinant = `${matrix[0][0]} * (${this.getDeterminantFormula(
             lowerOrderMatrix,
             order - 1
