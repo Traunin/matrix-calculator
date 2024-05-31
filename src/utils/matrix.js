@@ -732,10 +732,6 @@ export default class Matrix {
             matrixForSubtraction,
             new Array(size).fill(0)
         );
-        let diagonalForm = this.convertToDiagonalFromRowEchelon(
-            rowEchelonForm.rowEchelonMatrix,
-            new Array(size).fill(0)
-        );
 
         console.log(eigenvalue, rowEchelonForm);
         return this.parseMatrixIntoEigenvector(rowEchelonForm.rowEchelonMatrix);
