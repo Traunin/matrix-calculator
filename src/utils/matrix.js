@@ -625,11 +625,13 @@ export default class Matrix {
         );
         //console.log(determinatEquation);
         //console.log(Algebrite.simplify(determinatEquation).toString())
-        let eigenvalues = Algebrite.roots(Algebrite.simplify(determinatEquation))
+        let eigenvalues = Algebrite.roots(
+            Algebrite.simplify(determinatEquation)
+        )
             .toString()
             .replace(/[\[\]]|\.\.\./g, '')
             .split(',');
-        console.log("before", eigenvalues)
+        console.log('before', eigenvalues);
         //get rid of complex roots
         return eigenvalues.filter((val) => val.indexOf('i') == -1);
     }
@@ -640,7 +642,14 @@ export default class Matrix {
         } else if (order == 2) {
             return `${matrix[0][0]}*${matrix[1][1]}-${matrix[1][0]}*${matrix[0][1]}`;
         } else if (order == 3) {
-            return `${matrix[0][0]} * ${matrix[1][1]} * ${matrix[2][2]} - ${matrix[0][0]} * ${matrix[1][2]} * ${matrix[2][1]} - ${matrix[0][1]} * ${matrix[1][0]} * ${matrix[2][2]} + ${matrix[0][1]} * ${matrix[1][2]} * ${matrix[2][0]} + ${matrix[0][2]} * ${matrix[1][0]} * ${matrix[2][1]} - ${matrix[0][2]} * ${matrix[1][1]} * ${matrix[2][0]}`;
+            return (
+                `${matrix[0][0]} * ${matrix[1][1]} * ${matrix[2][2]}` +
+                `- ${matrix[0][0]} * ${matrix[1][2]} * ${matrix[2][1]}` +
+                `- ${matrix[0][1]} * ${matrix[1][0]} * ${matrix[2][2]}` +
+                `+ ${matrix[0][1]} * ${matrix[1][2]} * ${matrix[2][0]}` +
+                `+ ${matrix[0][2]} * ${matrix[1][0]} * ${matrix[2][1]}` +
+                `- ${matrix[0][2]} * ${matrix[1][1]} * ${matrix[2][0]}`
+            );
         }
 
         let lowerOrderMatrix = [];
@@ -761,15 +770,23 @@ export default class Matrix {
             }
             console.log(eigenvectorComponent);
             //eigenvectorComponent = eigenvectorComponent.substring(3);
-            if (eigenvectorComponent.charAt(1) == "-" && eigenvectorComponent.charAt(2)==" ") {
-                eigenvectorComponent = eigenvectorComponent.replace(" - ", "-");
+            if (
+                eigenvectorComponent.charAt(1) == '-' &&
+                eigenvectorComponent.charAt(2) == ' '
+            ) {
+                eigenvectorComponent = eigenvectorComponent.replace(' - ', '-');
             }
 
-            if (eigenvectorComponent.charAt(1) == "+" && eigenvectorComponent.charAt(2)==" ") {
-                eigenvectorComponent = eigenvectorComponent.replace(" + ", "");
+            if (
+                eigenvectorComponent.charAt(1) == '+' &&
+                eigenvectorComponent.charAt(2) == ' '
+            ) {
+                eigenvectorComponent = eigenvectorComponent.replace(' + ', '');
             }
 
-            eigenvectorComponent = eigenvectorComponent ? eigenvectorComponent : "0"
+            eigenvectorComponent = eigenvectorComponent
+                ? eigenvectorComponent
+                : '0';
             eigenvectorComponents[i] = [eigenvectorComponent];
         }
         return eigenvectorComponents;
