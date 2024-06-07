@@ -625,7 +625,7 @@ export default class Matrix {
         );
         //console.log(determinatEquation);
         //console.log(Algebrite.simplify(determinatEquation).toString())
-        let eigenvalues = Algebrite.roots(
+        let eigenvalues = Algebrite.nroots(
             Algebrite.simplify(determinatEquation)
         )
             .toString()
