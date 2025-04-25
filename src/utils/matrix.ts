@@ -1,11 +1,21 @@
-var Algebrite = require('algebrite');
+import Algebrite from 'algebrite';
+import type { Root } from './types';
+
 export default class Matrix {
+    rowCount: number
+    colCount: number
+    isSquare: boolean
+    isAugmented: boolean
+    determinant: number
+    matrix: number[][]
+    kVector: number[]
+
     constructor(
-        rowCount,
-        colCount,
+        rowCount: number,
+        colCount: number,
         isSquare = false,
         isAugmented = false,
-        matrix
+        matrix: number[][]
     ) {
         this.rowCount = rowCount;
         this.colCount = colCount;
@@ -56,8 +66,7 @@ export default class Matrix {
         }
     }
 
-    setRowCount(newRowCount) {
-        newRowCount = parseInt(newRowCount);
+    setRowCount(newRowCount: number) {
         if (
             newRowCount > 0 &&
             newRowCount <= 20 &&
@@ -79,8 +88,7 @@ export default class Matrix {
         return false;
     }
 
-    setColCount(newColCount) {
-        newColCount = parseInt(newColCount);
+    setColCount(newColCount: number) {
         if (
             newColCount > 0 &&
             newColCount <= 20 &&
@@ -118,15 +126,15 @@ export default class Matrix {
         }
     }
 
-    updateCellValue(rowIndex, colIndex, newValue) {
+    updateCellValue(rowIndex: number, colIndex: number, newValue: number) {
         this.matrix[rowIndex][colIndex] = newValue;
     }
 
-    updateKVectorValue(rowIndex, newValue) {
+    updateKVectorValue(rowIndex: number, newValue: number) {
         this.kVector[rowIndex] = newValue;
     }
 
-    updateMatrixFromString(newValue) {
+    updateMatrixFromString(newValue: string) {
         // Split the text into lines
         const lines = newValue.trim().split('\n');
         // Determine the dimensions of the matrix
@@ -140,7 +148,7 @@ export default class Matrix {
             }, 0);
         }
         // Create a new 2D array for the matrix
-        const matrix = [];
+        const matrix: number[][] = [];
         const parsedRows = [];
         // Parse the text and populate the matrix
         for (let i = 0; i < rows; i++) {
@@ -159,18 +167,22 @@ export default class Matrix {
             }
         }
         // If isAugmented is true, calculate the kVector
-        let kVector = null;
+        let kVector: number[] | null = null;
         if (this.isAugmented) {
             kVector = new Array(cols - 1).fill(0);
             for (let i = 0; i < rows; i++) {
                 const kValue = this.isSquare
                     ? parsedRows[i][matrix.length]
                     : matrix[i].pop();
-                kVector[i] = kValue;
+                if (kValue != undefined) {
+                    kVector[i] = kValue;
+                }
             }
         }
 
-        this.setMatrix(matrix, kVector);
+        if (kVector != undefined) {
+            this.setMatrix(matrix, kVector);
+        }
     }
 
     getMatrixAsString() {
@@ -197,7 +209,7 @@ export default class Matrix {
         return string;
     }
 
-    setMatrix(matrix, kVector) {
+    setMatrix(matrix: number[][], kVector: number[]) {
         this.rowCount = matrix.length;
         this.colCount = matrix[0].length;
         this.matrix = matrix;
@@ -206,7 +218,7 @@ export default class Matrix {
         }
     }
 
-    calculateDetetrminantRecursively(matrix) {
+    calculateDetetrminantRecursively(matrix?: number[][]) {
         if (matrix == null) {
             return this.calculateDeterminant(this.matrix, this.matrix.length);
         }
@@ -214,7 +226,7 @@ export default class Matrix {
         return this.calculateDeterminant(matrix, matrix.length);
     }
 
-    calculateDeterminant(matrix, order) {
+    calculateDeterminant(matrix: number[][], order: number): number {
         if (order == 1) {
             return matrix[0][0];
         } else if (order == 2) {
@@ -230,7 +242,7 @@ export default class Matrix {
             );
         }
 
-        let lowerOrderMatrix = [];
+        const lowerOrderMatrix: number[][] = [];
         // copying the array without the first row and the first column
         for (let i = 0; i < order - 1; i++) {
             lowerOrderMatrix[i] = [];
@@ -260,19 +272,19 @@ export default class Matrix {
     }
 
     calculateSolutionsWithCramer() {
-        let matrix = this.matrix;
-        let kVector = this.kVector;
+        const matrix = this.matrix;
+        const kVector = this.kVector;
 
-        let solutions = [];
-        let rowCount = matrix.length;
-        let columnCount = matrix[0].length;
-        let determinant = this.calculateDetetrminantRecursively(matrix);
+        const solutions = [];
+        const rowCount = matrix.length;
+        const columnCount = matrix[0].length;
+        const determinant = this.calculateDetetrminantRecursively(matrix);
 
         if (determinant == 0) {
             return { solutions: [], determinant: 0 };
         }
 
-        let matrixForInsertingKVector = JSON.parse(JSON.stringify(this.matrix));
+        const matrixForInsertingKVector = JSON.parse(JSON.stringify(this.matrix));
 
         // insert the kVector in every column one by one
         for (let i = 0; i < columnCount; i++) {
@@ -286,7 +298,7 @@ export default class Matrix {
                 matrixForInsertingKVector[j][i] = kVector[j];
             }
 
-            let currentDeterminant = this.calculateDetetrminantRecursively(
+            const currentDeterminant = this.calculateDetetrminantRecursively(
                 matrixForInsertingKVector
             );
 
@@ -297,12 +309,12 @@ export default class Matrix {
         return { solutions: solutions, determinant: determinant };
     }
 
-    static multiplyMatrices(matrix1, matrix2) {
-        let product = [];
+    static multiplyMatrices(matrix1: number[][], matrix2: number[][]) {
+        const product: number[][] = [];
         // Determine dimensions of matrices
-        let complementSquareSize = matrix1.length;
-        let productColCount = matrix1[0].length;
-        let productRowCount = matrix2.length;
+        const complementSquareSize = matrix1.length;
+        const productColCount = matrix1[0].length;
+        const productRowCount = matrix2.length;
 
         // Initialize product matrix with zeros
         for (let i = 0; i < productRowCount; i++) {
@@ -326,8 +338,8 @@ export default class Matrix {
         return product;
     }
 
-    findInverseMatrix() {
-        let determinant = this.calculateDetetrminantRecursively();
+    findInverseMatrix(): ({ determinant: number, inverseMatrix?: number[][] }) {
+        const determinant = this.calculateDetetrminantRecursively();
 
         if (determinant == 0) return { determinant }; // unable to find because the determinant is zero
 
@@ -344,7 +356,7 @@ export default class Matrix {
             }
         }
 
-        let inverseMatrix = this.transposeMatrix(algebraicComplementMatrix);
+        const inverseMatrix = this.transposeMatrix(algebraicComplementMatrix);
         for (let i = 0; i < inverseMatrix.length; i++) {
             for (let j = 0; j < inverseMatrix[0].length; j++) {
                 inverseMatrix[i][j] =
@@ -356,8 +368,8 @@ export default class Matrix {
         return { determinant, inverseMatrix };
     }
 
-    findAlgebraicComplement(matrix, row, col) {
-        let minorMatrix = new Array(matrix.length - 1);
+    findAlgebraicComplement(matrix: number[][], row: number, col: number) {
+        const minorMatrix = new Array(matrix.length - 1);
         for (let i = 0; i < minorMatrix.length; i++) {
             minorMatrix[i] = new Array(matrix[0].length - 1);
             for (let j = 0; j < matrix.length; j++) {
@@ -372,11 +384,11 @@ export default class Matrix {
         );
     }
 
-    transposeMatrix(matrix) {
-        let transposedMatrixRowCount = matrix[0].length;
-        let transposedMatrixColCount = matrix.length;
+    transposeMatrix(matrix: number[][]) {
+        const transposedMatrixRowCount = matrix[0].length;
+        const transposedMatrixColCount = matrix.length;
 
-        let transposedMatrix = new Array(transposedMatrixRowCount);
+        const transposedMatrix = new Array(transposedMatrixRowCount);
         for (let i = 0; i < transposedMatrixRowCount; i++) {
             transposedMatrix[i] = new Array(transposedMatrixColCount);
         }
@@ -391,40 +403,40 @@ export default class Matrix {
     }
 
     findSolutionsWithInverseMatrix() {
-        let inverseMatrixResult = this.findInverseMatrix();
-        if (inverseMatrixResult.determinant == 0) {
+        const {determinant, inverseMatrix} = this.findInverseMatrix();
+        if (determinant == 0) {
             return { determinant: 0 };
         }
 
-        let kVectorMatrix = new Array(this.kVector.length);
+        const kVectorMatrix = new Array(this.kVector.length);
         for (let i = 0; i < this.kVector.length; i++) {
             kVectorMatrix[i] = [this.kVector[i]];
         }
 
-        let solution = Matrix.multiplyMatrices(
+        const solution = Matrix.multiplyMatrices(
             kVectorMatrix,
-            inverseMatrixResult.inverseMatrix
+            inverseMatrix!
         );
 
-        let solutions = [];
+        const solutions = [];
 
         for (let i = 0; i < solution.length; i++) {
             solutions[i] = solution[i][0];
         }
 
         return {
-            determinant: inverseMatrixResult.determinant,
+            determinant: determinant,
             solutions,
         };
     }
 
-    copyMatrix(matrix) {
-        let originalMatrix = matrix == undefined ? this.matrix : matrix;
-        let rows = originalMatrix.length;
+    copyMatrix(matrix?: number[][]) {
+        const originalMatrix = matrix == undefined ? this.matrix : matrix;
+        const rows = originalMatrix.length;
         if (rows == 0) return [];
-        let cols = originalMatrix[0].length;
+        const cols = originalMatrix[0].length;
 
-        let matrixCopy = new Array(rows);
+        const matrixCopy = new Array(rows);
 
         for (let i = 0; i < rows; i++) {
             matrixCopy[i] = new Array(cols);
@@ -436,7 +448,7 @@ export default class Matrix {
         return matrixCopy;
     }
 
-    roundToDecimalPlace(number, precision) {
+    roundToDecimalPlace(number: number, precision: number) {
         return (
             Math.round(
                 (number + Number.EPSILON * Math.sign(number)) * 10 ** precision
@@ -446,7 +458,7 @@ export default class Matrix {
     }
 
     solveWithGaussElimination() {
-        let { rowEchelonMatrix, rowEchelonkVector } =
+        const { rowEchelonMatrix, rowEchelonkVector } =
             this.convertMatrixToRowEchelonForm();
 
         this.convertToDiagonalFromRowEchelon(
@@ -454,10 +466,10 @@ export default class Matrix {
             rowEchelonkVector
         );
 
-        let rows = rowEchelonMatrix.length;
-        let cols = rowEchelonMatrix[0].length;
+        const rows = rowEchelonMatrix.length;
+        const cols = rowEchelonMatrix[0].length;
 
-        let roots = [];
+        const roots: Root[] = [];
 
         for (let i = 0; i < Math.min(rows, cols); i++) {
             if (rowEchelonMatrix[i][i] <= Number.EPSILON * 100) {
@@ -472,7 +484,7 @@ export default class Matrix {
 
             for (let j = i + 1; j < cols; j++) {
                 if (Math.abs(rowEchelonMatrix[i][j]) > Number.EPSILON * 100) {
-                    let subtractionCoefficient = Math.abs(
+                    const subtractionCoefficient = Math.abs(
                         this.roundToDecimalPlace(rowEchelonMatrix[i][j], 4)
                     );
 
@@ -494,13 +506,13 @@ export default class Matrix {
         return roots;
     }
 
-    convertMatrixToRowEchelonForm(matrix, kVector) {
-        let rowEchelonMatrix = this.copyMatrix(matrix);
-        let rowEchelonkVector =
+    convertMatrixToRowEchelonForm(matrix?: number[][], kVector?: number[]) {
+        const rowEchelonMatrix = this.copyMatrix(matrix);
+        const rowEchelonkVector =
             kVector == undefined ? [...this.kVector] : [...kVector];
 
-        let rows = rowEchelonMatrix.length;
-        let cols = rowEchelonMatrix[0].length;
+        const rows = rowEchelonMatrix.length;
+        const cols = rowEchelonMatrix[0].length;
 
         let pivotNumberI = 0;
         let pivotNumberJ = 0;
@@ -513,7 +525,7 @@ export default class Matrix {
             );
 
             for (let i = pivotNumberI + 1; i < rows; i++) {
-                let checkingNumber = Math.abs(
+                const checkingNumber = Math.abs(
                     rowEchelonMatrix[i][pivotNumberJ]
                 );
                 if (checkingNumber > maxNumber) {
@@ -528,21 +540,21 @@ export default class Matrix {
                 // swap rows so that the one with the largest absolut value is at the top
                 if (rowWithMaxNumber != pivotNumberI) {
                     for (let j = pivotNumberJ; j < cols; j++) {
-                        let temp = rowEchelonMatrix[rowWithMaxNumber][j];
+                        const temp = rowEchelonMatrix[rowWithMaxNumber][j];
                         rowEchelonMatrix[rowWithMaxNumber][j] =
                             rowEchelonMatrix[pivotNumberI][j];
 
                         rowEchelonMatrix[pivotNumberI][j] = temp;
                     }
 
-                    let temp = rowEchelonkVector[pivotNumberI];
+                    const temp = rowEchelonkVector[pivotNumberI];
                     rowEchelonkVector[pivotNumberI] =
                         rowEchelonkVector[rowWithMaxNumber];
                     rowEchelonkVector[rowWithMaxNumber] = temp;
                 }
 
                 for (let i = pivotNumberI + 1; i < rows; i++) {
-                    let factor =
+                    const factor =
                         rowEchelonMatrix[i][pivotNumberJ] /
                         rowEchelonMatrix[pivotNumberI][pivotNumberJ];
                     rowEchelonMatrix[i][pivotNumberJ] = 0;
@@ -569,14 +581,14 @@ export default class Matrix {
         return { rowEchelonMatrix, rowEchelonkVector };
     }
 
-    convertToDiagonalFromRowEchelon(matrix, kVector) {
-        let rows = matrix.length;
-        let cols = matrix[0].length;
+    convertToDiagonalFromRowEchelon(matrix: number[][], kVector: number[]) {
+        const rows = matrix.length;
+        const cols = matrix[0].length;
 
         for (let i = 1; i < Math.min(rows, cols); i++) {
             if (Math.abs(matrix[i][i]) > Number.EPSILON * 100) {
                 for (let j = i - 1; j >= 0; j--) {
-                    let factor = matrix[j][i] / matrix[i][i];
+                    const factor = matrix[j][i] / matrix[i][i];
                     kVector[j] =
                         kVector[j] - kVector[i] * factor + Number.EPSILON;
                     matrix[j][i] = 0;
@@ -602,12 +614,14 @@ export default class Matrix {
     }
 
     getEigenvector() {
-        let eigenvalues = this.getEigenvectorEquation();
-        let eigenvectors = [];
-        eigenvalues.forEach((eigenvalue) =>
-            eigenvectors.push(this.getEigenvectorFromEigenvalue(eigenvalue))
+        const eigenvalues = this.getEigenvectorEquation();
+        const eigenvectors: string[][][] = [];
+        eigenvalues.forEach((eigenvalue) => {
+            const eigenvector = this.getEigenvectorFromEigenvalue(eigenvalue)
+            eigenvectors.push(eigenvector)
+        }
         );
-        let eigenpairs = [];
+        const eigenpairs = [];
         for (let i = 0; i < eigenvectors.length; i++) {
             eigenpairs.push({
                 eigenvalue: eigenvalues[i],
@@ -618,27 +632,27 @@ export default class Matrix {
     }
 
     getEigenvectorEquation() {
-        let stringMatrix = this.getAlphaStringsMatrix(this.matrix);
-        let determinatEquation = this.getDeterminantFormula(
+        const stringMatrix = this.getAlphaStringsMatrix(this.matrix);
+        const determinatEquation = this.getDeterminantFormula(
             stringMatrix,
             stringMatrix.length
         );
         //console.log(determinatEquation);
         //console.log(Algebrite.simplify(determinatEquation).toString())
-        let eigenvalues = Algebrite.nroots(
+        const eigenvalues: string[] = Algebrite.nroots(
             Algebrite.simplify(determinatEquation)
         )
             .toString()
-            .replace(/[\[\]]|\.\.\./g, '')
+            .replace(/[[\]]|\.\.\./g, '')
             .split(',');
         console.log('before', eigenvalues);
         //get rid of complex roots
         return eigenvalues.filter((val) => val.indexOf('i') == -1);
     }
 
-    getDeterminantFormula(matrix, order) {
+    getDeterminantFormula(matrix: number[][], order: number) {
         if (order == 1) {
-            return matrix[0][0];
+            return `${matrix[0][0]}`;
         } else if (order == 2) {
             return `${matrix[0][0]}*${matrix[1][1]}-${matrix[1][0]}*${matrix[0][1]}`;
         } else if (order == 3) {
@@ -652,7 +666,7 @@ export default class Matrix {
             );
         }
 
-        let lowerOrderMatrix = [];
+        const lowerOrderMatrix: number[][] = [];
         // copying the array without the first row and the first column
         for (let i = 0; i < order - 1; i++) {
             lowerOrderMatrix[i] = [];
@@ -662,7 +676,7 @@ export default class Matrix {
         }
 
         let subtraction = -1; // adding or subtracting based on the position in the matrix
-        let determinant = `${matrix[0][0]} * (${this.getDeterminantFormula(
+        let determinant: string = `${matrix[0][0]} * (${this.getDeterminantFormula(
             lowerOrderMatrix,
             order - 1
         )})`;
@@ -685,9 +699,9 @@ export default class Matrix {
         return determinant;
     }
 
-    getAlphaStringsMatrix(matrix) {
-        let matrixSize = matrix.length;
-        let stringMatrix = new Array(matrixSize);
+    getAlphaStringsMatrix(matrix: number[][]) {
+        const matrixSize = matrix.length;
+        const stringMatrix = new Array(matrixSize);
         for (let i = 0; i < matrixSize; i++) {
             stringMatrix[i] = new Array(matrixSize);
 
@@ -707,28 +721,28 @@ export default class Matrix {
         return stringMatrix;
     }
 
-    countDecimals(value) {
+    countDecimals(value: number) {
         if (value % 1 != 0) return value.toString().split('.')[1].length;
         return 0;
     }
 
-    floatToDivisionString(value) {
-        let decimalPlaces = this.countDecimals(value);
+    floatToDivisionString(value: number) {
+        const decimalPlaces = this.countDecimals(value);
         if (decimalPlaces == 0) {
             return `(${value})`;
         }
-        let factor = 10 ** decimalPlaces;
+        const factor = 10 ** decimalPlaces;
         return `(${value * factor}/${factor})`;
     }
 
-    getEigenvectorFromEigenvalue(eigenvalue) {
-        eigenvalue = parseFloat(eigenvalue);
-        let size = this.matrix.length;
-        let matrixForSubtraction = this.copyMatrix(this.matrix);
+    getEigenvectorFromEigenvalue(stringEigenvalue: string) {
+        const eigenvalue = parseFloat(stringEigenvalue);
+        const size = this.matrix.length;
+        const matrixForSubtraction = this.copyMatrix(this.matrix);
         for (let i = 0; i < size; i++) {
             matrixForSubtraction[i][i] -= eigenvalue;
         }
-        let rowEchelonForm = this.convertMatrixToRowEchelonForm(
+        const rowEchelonForm = this.convertMatrixToRowEchelonForm(
             matrixForSubtraction,
             new Array(size).fill(0)
         );
@@ -737,9 +751,9 @@ export default class Matrix {
         return this.parseMatrixIntoEigenvector(rowEchelonForm.rowEchelonMatrix);
     }
 
-    parseMatrixIntoEigenvector(rowEchelonMatrix) {
-        let size = rowEchelonMatrix.length;
-        let eigenvectorComponents = [];
+    parseMatrixIntoEigenvector(rowEchelonMatrix: number[][]) {
+        const size = rowEchelonMatrix.length;
+        const eigenvectorComponents = [];
 
         for (let i = 0; i < size; i++) {
             if (rowEchelonMatrix[i][i] <= Number.EPSILON * 100) {
@@ -750,7 +764,7 @@ export default class Matrix {
 
             for (let j = i + 1; j < size; j++) {
                 if (Math.abs(rowEchelonMatrix[i][j]) > Number.EPSILON * 100) {
-                    let subtractionCoefficient = Math.abs(
+                    const subtractionCoefficient = Math.abs(
                         this.roundToDecimalPlace(rowEchelonMatrix[i][j], 4)
                     );
 
