@@ -1,5 +1,5 @@
 import Algebrite from 'algebrite';
-import type { Root } from './types';
+import type { RationalRoot, Root } from '@/types/types';
 
 export default class Matrix {
     rowCount: number
@@ -488,13 +488,16 @@ export default class Matrix {
                         this.roundToDecimalPlace(rowEchelonMatrix[i][j], 4)
                     );
 
-                    roots[i]['rationalSubtraction'][`${j + 1}`] =
+                    if (roots[i].k != "R") {
+                        (roots[i] as RationalRoot).rationalSubtraction[`${j + 1}`] =
                         (Math.sign(-rowEchelonMatrix[i][j]) == -1
                             ? ' - '
                             : ' + ') +
                         (subtractionCoefficient == 1
                             ? ''
                             : subtractionCoefficient);
+                    }
+
                 }
             }
         }
