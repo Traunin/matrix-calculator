@@ -15,7 +15,7 @@ export default class Matrix {
         colCount: number,
         isSquare = false,
         isAugmented = false,
-        matrix: number[][]
+        matrix?: number[][]
     ) {
         this.rowCount = rowCount;
         this.colCount = colCount;
@@ -209,7 +209,7 @@ export default class Matrix {
         return string;
     }
 
-    setMatrix(matrix: number[][], kVector: number[]) {
+    setMatrix(matrix: number[][], kVector?: number[]) {
         this.rowCount = matrix.length;
         this.colCount = matrix[0].length;
         this.matrix = matrix;
