@@ -1,95 +1,101 @@
 <template>
-    <div class="calculator">
-        <matrix-editor
-            @update="solutionsFound = false"
-            :matrix="matrix"
-        ></matrix-editor>
+  <div class="calculator">
+    <matrix-editor
+      :matrix="matrix"
+      @update="solutionsFound = false"
+    />
 
-        <button @click.prevent="getSolutions()">Найти корни системы</button>
+    <button @click.prevent="getSolutions()">
+      Найти корни системы
+    </button>
+    <div 
+      v-if="solutionsFound"
+      class="result"
+    >
+      <div
+        v-if="determinant == 0"
+        class="error"
+      >
+        Ошибка! Определитель равен нулю.
+      </div>
+      <div
+        v-if="determinant != 0"
+        class="solutions"
+      >
         <div
-            class="result"
-            v-if="solutionsFound"
+          v-for="(solution, index) in solutions"
+          :key="index"
+          class="solution"
         >
-            <div
-                v-if="determinant == 0"
-                class="error"
-            >
-                Ошибка! Определитель равен нулю.
-            </div>
-            <div
-                class="solutions"
-                v-if="determinant != 0"
-            >
-                <div
-                    class="solution"
-                    v-for="(solution, index) in solutions"
-                >
-                    x<sub>{{ index + 1 }}</sub> = {{ solution }};&nbsp;
-                </div>
-            </div>
+          x<sub>
+            {{ index + 1 }}
+          </sub> = {{ solution }};&nbsp;
         </div>
+      </div>
     </div>
+  </div>
 </template>
 
-<script setup>
-import MatrixEditor from "@/components/MatrixEditor.vue";
+<script setup lang="ts">
+import MatrixEditor from "@/components/matrix-editor.vue";
 import Matrix from "@/utils/matrix";
 import { ref, reactive } from "vue";
 
-let matrix = reactive(new Matrix(4, 4, true, true));
-let solutionsFound = ref(false);
-let solutions = ref([]);
-let determinant = ref(0);
+const matrix = reactive(new Matrix(4, 4, true, true));
+const solutionsFound = ref(false);
+const solutions = ref<number[]>([]);
+const determinant = ref(0);
 
 function getSolutions() {
-    let result = matrix.calculateSolutionsWithCramer();
-    solutions.value = result.solutions;
-    determinant.value = result.determinant;
-    solutionsFound.value = true;
+  const result = matrix.calculateSolutionsWithCramer();
+  solutions.value = result.solutions;
+  determinant.value = result.determinant;
+  solutionsFound.value = true;
 }
 </script>
 
 <style scoped>
 .calculator {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    flex-grow: 1;
-    margin: auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  flex-grow: 1;
+  margin: auto;
 }
 
 button {
-    margin: 20px;
-    padding: 5px;
-    font-size: 1em;
-    display: inline-block;
-    background-color: #4bbf44;
-    color: var(--text-color);
-    border-radius: 5px;
-    border: 3px solid #4bbf44;
-    transition: all 0.1s;
-    cursor: pointer;
+  margin: 20px;
+  padding: 5px;
+  font-size: 1em;
+  display: inline-block;
+  background-color: #4bbf44;
+  color: var(--text-color);
+  border-radius: 5px;
+  border: 3px solid #4bbf44;
+  transition: all 0.1s;
+  cursor: pointer;
 }
 
 button:hover {
-    border-color: #94dada;
+  border-color: #94dada;
 }
 
 .error {
-    color: red;
+  color: red;
 }
 
-.result, .solutions {
-    margin: 0 0 10px 0;
-    display: inline-flex;
-    flex-direction: row;
-    font-size: 1em;
-    font-family: "Roboto", sans-serif;
+.result,
+.solutions {
+  margin: 0 0 10px 0;
+  display: inline-flex;
+  flex-direction: row;
+  font-size: 1em;
+  font-family: "Roboto", sans-serif;
 }
 
 sub {
-    vertical-align: sub;
-    font-size: smaller;
+  vertical-align: sub;
+  font-size: smaller;
 }
 </style>

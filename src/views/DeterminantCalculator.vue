@@ -1,67 +1,67 @@
 <template>
-    <div class="calculator">
-        <matrix-editor :matrix="matrix"></matrix-editor>
-        <div class="determinant">
-            <button @click.prevent="calculateDeterminant">
-                Найти определитель
-            </button>
-            <div
-                class="result"
-                v-if="determinantCalculated"
-            >
-                Δ = {{ determinant }}
-            </div>
-        </div>
+  <div class="calculator">
+    <matrix-editor :matrix="matrix" />
+    <div class="determinant">
+      <button @click.prevent="calculateDeterminant">
+        Найти определитель
+      </button>
+      <div 
+        v-if="determinantCalculated" 
+        class="result"
+      >
+        Δ = {{ determinant }}
+      </div>
     </div>
+  </div>
 </template>
 
-<script setup>
-import MatrixEditor from "@/components/MatrixEditor.vue";
+<script setup lang="ts">
+import MatrixEditor from "@/components/matrix-editor.vue";
 import Matrix from "@/utils/matrix";
 import { ref, reactive, watch } from "vue";
 
-let matrix = reactive(new Matrix(4, 4, true, false));
-let determinantCalculated = ref(false);
-let determinant = ref(0);
+const matrix = reactive(new Matrix(4, 4, true, false));
+const determinantCalculated = ref(false);
+const determinant = ref(0);
 
 watch(matrix, () => (determinantCalculated.value = false));
 
 function calculateDeterminant() {
-    determinantCalculated.value = true;
-    determinant.value = matrix.calculateDetetrminantRecursively();
+  determinantCalculated.value = true;
+  determinant.value = matrix.calculateDetetrminantRecursively();
 }
 </script>
 
 <style scoped>
 .calculator {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    flex-grow: 1;
-    margin: auto
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  flex-grow: 1;
+  margin: auto
 }
 
 button {
-    margin: 20px;
-    padding: 5px;
-    font-size: 1em;
-    display: inline-block;
-    background-color: var(--primary-color);
-    color: var(--text-color);
-    border-radius: 5px;
-    border: 3px solid #4bbf44;
-    transition: all 0.1s;
-    cursor: pointer;
+  margin: 20px;
+  padding: 5px;
+  font-size: 1em;
+  display: inline-block;
+  background-color: var(--primary-color);
+  color: var(--text-color);
+  border-radius: 5px;
+  border: 3px solid #4bbf44;
+  transition: all 0.1s;
+  cursor: pointer;
 }
 
 button:hover {
-    border-color: #94dada;
+  border-color: #94dada;
 }
 
 .result {
-    display: inline-block;
-    font-size: 1em;
-    font-family: "Roboto", sans-serif;
+  display: inline-block;
+  font-size: 1em;
+  font-family: "Roboto", sans-serif;
 }
 </style>
