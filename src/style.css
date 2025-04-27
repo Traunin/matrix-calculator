@@ -17,6 +17,7 @@
 }
 
 .dark {
+  --primary-color: #4bbf44;
   --text-color: #f5fcf6;
   --background-color: rgb(41, 41, 41);
   --input-background: #000;
