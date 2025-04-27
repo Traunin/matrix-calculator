@@ -15,3 +15,6 @@ Finds inverse matrix
 
 ### MatrixInverseSolver
 Uses inverse matrix to find solutions for systems of linear equations
+
+### EigenvectorFinder
+Finds eigenvectors using [Algebrite](https://github.com/davidedc/Algebrite)
