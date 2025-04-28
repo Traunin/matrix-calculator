@@ -167,7 +167,7 @@ export default class Matrix {
             }
         }
         // If isAugmented is true, calculate the kVector
-        let kVector: number[] | null = null;
+        let kVector: number[] | undefined = undefined;
         if (this.isAugmented) {
             kVector = new Array(cols - 1).fill(0);
             for (let i = 0; i < rows; i++) {
@@ -180,9 +180,8 @@ export default class Matrix {
             }
         }
 
-        if (kVector != undefined) {
-            this.setMatrix(matrix, kVector);
-        }
+
+        this.setMatrix(matrix, kVector);
     }
 
     getMatrixAsString() {

@@ -37,7 +37,7 @@ function unsetNaN() {
 
 watch(() => props.value, (newVal) => {
   //updates value in cell when matrix is externally updated
-  if (displayedValue.value != "") {
+  if (displayedValue.value !== "") {
     displayedValue.value = newVal
   }
 })
