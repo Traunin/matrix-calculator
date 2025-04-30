@@ -24,46 +24,21 @@
       >
         <editor-icon />
       </button>
-      <div
+      <size-controller
         v-if="!matrix.isSquare && userResizable"
+        :name="`Строки`"
+        :size="displayedRowCount"
         class="row-controller"
-      >
-        <div class="row-count-caption">
-          Строки
-        </div>
-        <button @click.prevent="removeRow">
-          —
-        </button>
-        <input
-          :id="`row-count-editor-${id}`"
-          v-model="inputRowCount"
-          @blur="updateDisplayedRowCount"
-        >
-        <button @click.prevent="addRow">
-          +
-        </button>
-      </div>
+        @update="size => matrix.setRowCount(size)"
+      />
 
-      <div
+      <size-controller
         v-if="userResizable"
+        :name="matrix.isSquare ? `Порядок`: `Столбцы`"
+        :size="displayedColCount"
         class="col-controller"
-      >
-        <div class="col-count-caption">
-          {{ matrix.isSquare ? "Порядок" : "Столбцы" }}
-        </div>
-        <button @click.prevent="removeCol">
-          —
-        </button>
-        <input
-          :id="`col-count-editor-${id}`"
-          v-model="inputColCount"
-          @blur="updateDisplayedColCount"
-          @keypress="isNumber($event)"
-        >
-        <button @click.prevent="addCol">
-          +
-        </button>
-      </div>
+        @update="size => matrix.setColCount(size)"
+      />
     </div>
     <div class="matrix-table">
       <table>
@@ -120,7 +95,8 @@
 <script setup lang="ts">
 import Matrix from "@/utils/matrix";
 import MatrixCell from "@/components/matrix-cell.vue";
-import editorIcon from "@/components/editor-icon.vue";
+import EditorIcon from "@/components/editor-icon.vue";
+import SizeController from "@/components/size-controller.vue";
 import { uidGet } from "@/utils/uidGenerator";
 import { computed, reactive, watch, ref, useTemplateRef } from "vue";
 
@@ -153,30 +129,6 @@ const displayedRowCount = computed(() => {
 const displayedColCount = computed(() => {
   return matrix.colCount;
 });
-
-function updateDisplayedRowCount() {
-  inputRowCount.value = matrix.rowCount;
-}
-
-function updateDisplayedColCount() {
-  inputColCount.value = matrix.colCount;
-}
-
-function addRow() {
-  matrix.addRow();
-}
-
-function removeRow() {
-  matrix.removeRow();
-}
-
-function addCol() {
-  matrix.addCol();
-}
-
-function removeCol() {
-  matrix.removeCol();
-}
 
 function updateCellValue(rowIndex: number, colIndex: number, e: KeyboardEvent) {
   const newValue = parseFloat((e.target as HTMLInputElement).value);
@@ -243,8 +195,6 @@ watch(inputColCount, (val) => {
 });
 
 watch(matrix, () => {
-  updateDisplayedRowCount();
-  updateDisplayedColCount();
   editorText.value = matrix.getMatrixAsString();
 });
 </script>
@@ -357,52 +307,11 @@ th {
   font-family: "Roboto Monospace", monospace;
 }
 
-.size-controller button {
-  font-size: 15px;
-  width: 25px;
-  height: 25px;
-  border-radius: 5px;
-  border: none;
-  background-color: var(--primary-color);
-  text-align: center;
-  cursor: pointer;
-  color: var(--text-color);
-}
-
-.size-controller button:hover {
-  border: 2px solid #dedcff;
-}
-
 .size-controller {
   display: flex;
   justify-content: center;
   margin-bottom: 10px;
   margin-right: 25px;
-}
-
-.size-controller input {
-  width: 50px;
-  text-align: center;
-  font-family: "Roboto Monospace", monospace;
-}
-
-.row-count-caption,
-.col-count-caption {
-  text-align: center;
-  margin-bottom: 5px;
-  color: var(--text-color);
-}
-
-.size-controller input {
-  height: 25px;
-  padding: 0;
-  padding-block: 0;
-  padding-inline: 0;
-  border: 2px solid var(--text-color);
-  box-sizing: border-box;
-  margin: 0 10px;
-  color: var(--text-color);
-  background: var(--input-background);
 }
 
 .col-controller,
