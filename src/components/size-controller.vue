@@ -86,7 +86,7 @@ function emitUpdate() {
 }
 
 button {
-  font-size: 15px;
+  font-weight: 700;
   width: 25px;
   height: 25px;
   border-radius: 5px;
