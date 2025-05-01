@@ -119,9 +119,6 @@ const props = defineProps({
 
 const matrix = reactive(props.matrix);
 
-const inputRowCount = ref(matrix.rowCount);
-const inputColCount = ref(matrix.colCount);
-
 const displayedRowCount = computed(() => {
   return matrix.rowCount;
 });
@@ -185,14 +182,6 @@ function isNumberOrSpace(evt: KeyboardEvent) {
     return true;
   }
 }
-
-watch(inputRowCount, (val) => {
-  matrix.setRowCount(val);
-});
-
-watch(inputColCount, (val) => {
-  matrix.setColCount(val);
-});
 
 watch(matrix, () => {
   editorText.value = matrix.getMatrixAsString();
@@ -302,7 +291,6 @@ th {
   line-height: 29px;
   padding-right: 10px !important;
   width: 80px;
-  left: -90px;
   text-align: right;
   font-family: "Roboto Monospace", monospace;
 }
