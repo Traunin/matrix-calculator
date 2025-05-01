@@ -61,7 +61,7 @@ function debounceInput() {
 }
 
 function offsetSize(offset: number) {
-  const result = internalSize.value + offset
+  const result = Number(internalSize.value) + offset
   if (result > 0 && result < 20) {
     internalSize.value += offset
     debounceInput()
@@ -74,7 +74,7 @@ function blur() {
 }
 
 function emitUpdate() {
-  emit("update", internalSize.value)
+  emit("update", Number(internalSize.value))
 }
 </script>
 
