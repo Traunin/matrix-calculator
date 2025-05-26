@@ -41,14 +41,8 @@ watch(() => props.size, (val) => {
 })
 
 function isNumber(evt: KeyboardEvent) {
-  //evt = evt ? evt : window.event;
-  const charCode = evt.which ? evt.which : evt.keyCode;
-  if (
-    charCode > 31 &&
-    (charCode < 48 || charCode > 57) &&
-    charCode !== 46 &&
-    charCode !== 45
-  ) {
+  const isNumber = /^[0-9]$/i.test(evt.key)
+  if (!isNumber) {
     evt.preventDefault();
   }
 }
