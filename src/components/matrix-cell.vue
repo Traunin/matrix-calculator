@@ -14,16 +14,16 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch, useTemplateRef } from "vue"
+import { ref, useTemplateRef, watch } from 'vue'
 
 const props = defineProps<{
-  rowIndex: number,
-  colIndex: number,
-  matrixId: number,
+  rowIndex: number
+  colIndex: number
+  matrixId: number
   value: number
-}>();
+}>()
 
-const input = useTemplateRef<HTMLInputElement>("input")
+const input = useTemplateRef<HTMLInputElement>('input')
 const displayedValue = ref<number | string>(props.value)
 
 function selectAllText() {
@@ -31,13 +31,13 @@ function selectAllText() {
 }
 
 function unsetNaN() {
-  const num = parseFloat(String(displayedValue.value))
-  displayedValue.value = isNaN(num) ? 0 : num; // put a zero when the cell is empty
+  const num = Number.parseFloat(String(displayedValue.value))
+  displayedValue.value = Number.isNaN(num) ? 0 : num // put a zero when the cell is empty
 }
 
 watch(() => props.value, (newVal) => {
-  //updates value in cell when matrix is externally updated
-  if (displayedValue.value !== "") {
+  // updates value in cell when matrix is externally updated
+  if (displayedValue.value !== '') {
     displayedValue.value = newVal
   }
 })

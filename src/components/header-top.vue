@@ -5,13 +5,13 @@
     </div>
 
     <div class="navbar">
-      <navbar-dropdown />
+      <NavbarDropdown />
     </div>
   </header>
 </template>
 
 <script setup lang="ts">
-import NavbarDropdown from '@/components/navbar-dropdown.vue';
+import NavbarDropdown from '@/components/navbar-dropdown.vue'
 </script>
 
 <style>

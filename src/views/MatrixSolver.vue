@@ -1,6 +1,6 @@
 <template>
   <div class="calculator">
-    <matrix-editor
+    <MatrixEditor
       :matrix="matrix"
       @update="solutionsFound = false"
     />
@@ -8,18 +8,18 @@
     <button @click.prevent="getSolutions()">
       Найти корни системы
     </button>
-    <div 
+    <div
       v-if="solutionsFound"
       class="result"
     >
       <div
-        v-if="determinant == 0"
+        v-if="determinant === 0"
         class="error"
       >
         Ошибка! Определитель равен нулю.
       </div>
       <div
-        v-if="determinant != 0"
+        v-if="determinant !== 0"
         class="solutions"
       >
         <div
@@ -37,20 +37,20 @@
 </template>
 
 <script setup lang="ts">
-import MatrixEditor from "@/components/matrix-editor.vue";
-import Matrix from "@/utils/matrix";
-import { ref, reactive } from "vue";
+import { reactive, ref } from 'vue'
+import MatrixEditor from '@/components/matrix-editor.vue'
+import Matrix from '@/utils/matrix'
 
-const matrix = reactive(new Matrix(4, 4, true, true));
-const solutionsFound = ref(false);
-const solutions = ref<number[]>([]);
-const determinant = ref(0);
+const matrix = reactive(new Matrix(4, 4, true, true))
+const solutionsFound = ref(false)
+const solutions = ref<number[]>([])
+const determinant = ref(0)
 
 function getSolutions() {
-  const result = matrix.calculateSolutionsWithCramer();
-  solutions.value = result.solutions;
-  determinant.value = result.determinant;
-  solutionsFound.value = true;
+  const result = matrix.calculateSolutionsWithCramer()
+  solutions.value = result.solutions
+  determinant.value = result.determinant
+  solutionsFound.value = true
 }
 </script>
 

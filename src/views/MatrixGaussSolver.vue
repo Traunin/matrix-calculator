@@ -1,29 +1,29 @@
 <template>
   <div class="calculator">
-    <matrix-editor 
-      :matrix="matrix" 
-      @update="solutionsFound = false" 
+    <MatrixEditor
+      :matrix="matrix"
+      @update="solutionsFound = false"
     />
 
     <button @click.prevent="getSolutions()">
       Найти корни системы
     </button>
-    <div 
-      v-if="solutionsFound" 
+    <div
+      v-if="solutionsFound"
       class="result"
     >
-      <div 
-        v-for="(solution, index) in solutions" 
-        :key="index" 
+      <div
+        v-for="(solution, index) in solutions"
+        :key="index"
         class="solution"
       >
         x
         <sub>
           {{ index + 1 }}
         </sub>
-        {{ solution.k == "R" ? " ∊ R" : " = " + solution.k }}
-        <span 
-          v-for="(subtraction, subIndex) in (solution as RationalRoot).rationalSubtraction" 
+        {{ solution.k === "R" ? " ∊ R" : ` = ${solution.k}` }}
+        <span
+          v-for="(subtraction, subIndex) in (solution as RationalRoot).rationalSubtraction"
           :key="subIndex"
           class="rational-subtraction"
         >
@@ -36,24 +36,25 @@
     </div>
   </div>
 </template>
-<script setup lang="ts">
-import { ref, reactive, watch } from "vue";
-import MatrixEditor from "@/components/matrix-editor.vue";
-import Matrix from "@/utils/matrix";
-import type { RationalRoot, Root } from "@/types/types"
 
-const matrix = reactive(new Matrix(3, 3, false, true));
-const solutionsFound = ref(false);
-const solutions = ref<Root[]>([]);
+<script setup lang="ts">
+import { reactive, ref, watch } from 'vue'
+import MatrixEditor from '@/components/matrix-editor.vue'
+import type { RationalRoot, Root } from '@/types/types'
+import Matrix from '@/utils/matrix'
+
+const matrix = reactive(new Matrix(3, 3, false, true))
+const solutionsFound = ref(false)
+const solutions = ref<Root[]>([])
 
 function getSolutions() {
-  solutions.value = matrix.solveWithGaussElimination();
-  solutionsFound.value = true;
+  solutions.value = matrix.solveWithGaussElimination()
+  solutionsFound.value = true
 }
 
 watch(matrix, () => {
-  solutionsFound.value = false;
-});
+  solutionsFound.value = false
+})
 </script>
 
 <style scoped>

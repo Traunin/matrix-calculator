@@ -22,19 +22,19 @@
         class="open-editor-button"
         @click.prevent="openEditor"
       >
-        <editor-icon />
+        <EditorIcon />
       </button>
-      <size-controller
+      <SizeController
         v-if="!matrix.isSquare && userResizable"
-        :name="`Строки`"
+        name="Строки"
         :size="displayedRowCount"
         class="row-controller"
         @update="size => matrix.setRowCount(size)"
       />
 
-      <size-controller
+      <SizeController
         v-if="userResizable"
-        :name="matrix.isSquare ? `Порядок`: `Столбцы`"
+        :name="matrix.isSquare ? `Порядок` : `Столбцы`"
         :size="displayedColCount"
         class="col-controller"
         @update="size => matrix.setColCount(size)"
@@ -47,7 +47,7 @@
             <th class="size">
               {{ displayedRowCount }} x {{ displayedColCount }}
             </th>
-            <th 
+            <th
               v-for="colIndex in displayedColCount"
               :key="colIndex"
             >
@@ -58,25 +58,25 @@
               Доп.
             </th>
           </tr>
-          <tr 
+          <tr
             v-for="(row, rowIndex) in matrix.matrix"
             :key="rowIndex"
           >
             <td class="row-index">
               {{ rowIndex + 1 }}
             </td>
-            <matrix-cell
+            <MatrixCell
               v-for="(value, colIndex) in row"
               :key="`${colIndex}_${rowIndex}`"
               :col-index="colIndex"
               :row-index="rowIndex"
               :matrix-id="id"
-              :value="value == 0 ? 0 : value"
+              :value="value === 0 ? 0 : value"
               @keypress="isNumber($event)"
               @input="(e: KeyboardEvent) => updateCellValue(rowIndex, colIndex, e)"
             />
 
-            <matrix-cell
+            <MatrixCell
               v-if="matrix.isAugmented"
               :col-index="matrix.colCount + 1"
               :row-index="rowIndex"
@@ -93,17 +93,12 @@
 </template>
 
 <script setup lang="ts">
-import Matrix from "@/utils/matrix";
-import MatrixCell from "@/components/matrix-cell.vue";
-import EditorIcon from "@/components/editor-icon.vue";
-import SizeController from "@/components/size-controller.vue";
-import { uidGet } from "@/utils/uidGenerator";
-import { computed, reactive, watch, ref, useTemplateRef } from "vue";
-
-const id = uidGet();
-const editorOpen = ref(false);
-const editorText = ref("");
-const matrixEditor = useTemplateRef("matrixEditor");
+import { computed, reactive, ref, useTemplateRef, watch } from 'vue'
+import EditorIcon from '@/components/editor-icon.vue'
+import MatrixCell from '@/components/matrix-cell.vue'
+import SizeController from '@/components/size-controller.vue'
+import Matrix from '@/utils/matrix'
+import { uidGet } from '@/utils/uidGenerator'
 
 const props = defineProps({
   userResizable: {
@@ -115,61 +110,64 @@ const props = defineProps({
     type: Matrix,
     required: true,
   },
-});
+})
 
-const matrix = reactive(props.matrix);
+const id = uidGet()
+const editorOpen = ref(false)
+const editorText = ref('')
+const matrixEditor = useTemplateRef('matrixEditor')
+
+const matrix = reactive(props.matrix)
 
 const displayedRowCount = computed(() => {
-  return matrix.rowCount;
-});
+  return matrix.rowCount
+})
 
 const displayedColCount = computed(() => {
-  return matrix.colCount;
-});
+  return matrix.colCount
+})
 
 function updateCellValue(rowIndex: number, colIndex: number, e: KeyboardEvent) {
-  const newValue = parseFloat((e.target as HTMLInputElement).value);
-  if (!isNaN(newValue)) {
-    matrix.updateCellValue(rowIndex, colIndex, newValue);
+  const newValue = Number.parseFloat((e.target as HTMLInputElement).value)
+  if (!Number.isNaN(newValue)) {
+    matrix.updateCellValue(rowIndex, colIndex, newValue)
   }
 }
 
 function updateKVectorValue(rowIndex: number, e: KeyboardEvent) {
-  const newValue = parseFloat((e.target as HTMLInputElement).value);
-  if (!isNaN(newValue)) {
-    matrix.updateKVectorValue(rowIndex, newValue);
+  const newValue = Number.parseFloat((e.target as HTMLInputElement).value)
+  if (!Number.isNaN(newValue)) {
+    matrix.updateKVectorValue(rowIndex, newValue)
   }
 }
 
 function openEditor() {
-  editorText.value = matrix.getMatrixAsString();
-  editorOpen.value = true;
-  setTimeout(() => matrixEditor.value?.select(), 0);
+  editorText.value = matrix.getMatrixAsString()
+  editorOpen.value = true
+  setTimeout(() => matrixEditor.value?.select(), 0)
 }
 
 function closeEditor() {
-  matrix.updateMatrixFromString(editorText.value);
-  editorOpen.value = false;
+  matrix.updateMatrixFromString(editorText.value)
+  editorOpen.value = false
 }
 
 function isNumber(evt: KeyboardEvent) {
-  //evt = evt ? evt : window.event;
-  const charCode = evt.which ? evt.which : evt.keyCode;
+  const charCode = evt.which ? evt.which : evt.keyCode
   if (
     charCode > 31 &&
     (charCode < 48 || charCode > 57) &&
     charCode !== 46 &&
     charCode !== 45
   ) {
-    evt.preventDefault();
+    evt.preventDefault()
   } else {
-    return true;
+    return true
   }
 }
 
 function isNumberOrSpace(evt: KeyboardEvent) {
-  //evt = evt ? evt : window.event;
-  const charCode = evt.which ? evt.which : evt.keyCode;
+  const charCode = evt.which ? evt.which : evt.keyCode
   if (
     charCode > 31 &&
     (charCode < 48 || charCode > 57) &&
@@ -177,15 +175,15 @@ function isNumberOrSpace(evt: KeyboardEvent) {
     charCode !== 45 &&
     charCode !== 32
   ) {
-    evt.preventDefault();
+    evt.preventDefault()
   } else {
-    return true;
+    return true
   }
 }
 
 watch(matrix, () => {
-  editorText.value = matrix.getMatrixAsString();
-});
+  editorText.value = matrix.getMatrixAsString()
+})
 </script>
 
 <style scoped>

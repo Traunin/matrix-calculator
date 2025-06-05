@@ -1,28 +1,28 @@
 <template>
   <div class="calculator">
-    <matrix-editor 
+    <MatrixEditor
       :matrix="matrix"
-      @update="solutionsFound = false" 
+      @update="solutionsFound = false"
     />
 
-    <div 
+    <div
       v-if="solutionsFound"
       class="eigenpairs"
     >
       <div
         v-for="(eigenPair, index) in result"
-        :key="index" 
+        :key="index"
         class="eigenpair"
       >
         <div class="eigenvalue">
           𝜆 = {{ eigenPair.eigenvalue }}
         </div>
         <div class="eigenvector">
-          <div 
-            v-for="coefficient in eigenPair.eigenvector" 
-            :key="coefficient.toString()" 
+          <div
+            v-for="coefficient in eigenPair.eigenvector"
+            :key="coefficient.toString()"
             class="coefficient"
-            v-html="wrapIndex(coefficient)" 
+            v-html="wrapIndex(coefficient)"
           />
         </div>
       </div>
@@ -34,26 +34,26 @@
 </template>
 
 <script setup lang="ts">
-import MatrixEditor from '@/components/matrix-editor.vue';
-import Matrix from '@/utils/matrix';
-import { ref, reactive, watch } from 'vue';
+import { reactive, ref, watch } from 'vue'
+import MatrixEditor from '@/components/matrix-editor.vue'
+import Matrix from '@/utils/matrix'
 
-const matrix = reactive(new Matrix(3, 3, true, false));
-const solutionsFound = ref(false);
-const result = ref<{ eigenvalue: string, eigenvector: string[][] }[]>([]);
+const matrix = reactive(new Matrix(3, 3, true, false))
+const solutionsFound = ref(false)
+const result = ref<{ eigenvalue: string, eigenvector: string[][] }[]>([])
 
 function getEigenvector() {
-  result.value = [...matrix.getEigenvector()];
-  solutionsFound.value = true;
+  result.value = [...matrix.getEigenvector()]
+  solutionsFound.value = true
 }
 
 function wrapIndex(str: string[]) {
-  return str.toString().replace(/x(\d+)/g, 'x<sub>$1</sub>');
+  return str.toString().replace(/x(\d+)/g, 'x<sub>$1</sub>')
 }
 
 watch(matrix, () => {
-  solutionsFound.value = false;
-});
+  solutionsFound.value = false
+})
 </script>
 
 <style scoped>

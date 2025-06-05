@@ -1,14 +1,14 @@
 <template>
   <div class="calculator">
     <div class="matrix-display">
-      <matrix-editor :matrix="matrix" />
-      <div 
+      <MatrixEditor :matrix="matrix" />
+      <div
         v-show="inverseMatrixCalculated"
         class="inverse-matrix"
       >
-        <matrix-editor 
+        <MatrixEditor
           :matrix="inverseMatrix"
-          :user-resizable="false" 
+          :user-resizable="false"
         />
       </div>
     </div>
@@ -16,7 +16,7 @@
       Найти обратную матрицу
     </button>
 
-    <div 
+    <div
       v-if="error"
       class="error"
     >
@@ -26,29 +26,29 @@
 </template>
 
 <script setup lang="ts">
-import MatrixEditor from "@/components/matrix-editor.vue";
-import Matrix from "@/utils/matrix";
-import { ref, reactive, watch } from "vue";
+import { reactive, ref, watch } from 'vue'
+import MatrixEditor from '@/components/matrix-editor.vue'
+import Matrix from '@/utils/matrix'
 
-const matrix = reactive(new Matrix(4, 4, true));
-const inverseMatrix = reactive(new Matrix(4, 4, true));
+const matrix = reactive(new Matrix(4, 4, true))
+const inverseMatrix = reactive(new Matrix(4, 4, true))
 
-const inverseMatrixCalculated = ref(false);
-const error = ref(false);
+const inverseMatrixCalculated = ref(false)
+const error = ref(false)
 
 watch(matrix, () => {
-  inverseMatrixCalculated.value = false;
-  error.value = false;
-});
+  inverseMatrixCalculated.value = false
+  error.value = false
+})
 
 function findInverseMatrix() {
-  const result = matrix.findInverseMatrix();
-  const determinant = result.determinant;
-  if (determinant == 0) {
-    error.value = true;
+  const result = matrix.findInverseMatrix()
+  const determinant = result.determinant
+  if (determinant === 0) {
+    error.value = true
   } else {
-    inverseMatrix.setMatrix(result.inverseMatrix!);
-    inverseMatrixCalculated.value = true;
+    inverseMatrix.setMatrix(result.inverseMatrix!)
+    inverseMatrixCalculated.value = true
   }
 }
 </script>

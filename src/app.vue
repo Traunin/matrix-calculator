@@ -7,16 +7,16 @@ useDark({
   selector: 'body',
   attribute: 'class',
   valueDark: 'dark',
-  valueLight: 'light'
+  valueLight: 'light',
 })
 </script>
 
 <template>
-  <header-top />
+  <HeaderTop />
   <div class="content">
     <router-view />
   </div>
-  <theme-switcher class="theme-switcher" />
+  <ThemeSwitcher class="theme-switcher" />
 </template>
 
 <style scoped>

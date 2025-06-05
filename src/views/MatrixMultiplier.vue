@@ -1,18 +1,18 @@
 <template>
   <div class="calculator">
     <div class="matrix-container">
-      <matrix-editor :matrix="matrix2" />
+      <MatrixEditor :matrix="matrix2" />
     </div>
 
     <div class="matrix-container">
-      <matrix-editor :matrix="matrix1" />
+      <MatrixEditor :matrix="matrix1" />
     </div>
 
-    <div 
+    <div
       class="matrix-container"
       style="padding-top: 16px"
     >
-      <matrix-editor
+      <MatrixEditor
         :matrix="matrix3"
         :user-resizable="false"
       />
@@ -21,28 +21,27 @@
 </template>
 
 <script setup lang="ts">
-import MatrixEditor from "@/components/matrix-editor.vue";
-import Matrix from "@/utils/matrix";
+import { reactive, watch } from 'vue'
+import MatrixEditor from '@/components/matrix-editor.vue'
+import Matrix from '@/utils/matrix'
 
-import { watch, reactive } from "vue";
-
-const matrix1 = reactive(new Matrix(3, 2));
-const matrix2 = reactive(new Matrix(4, 3));
-const matrix3 = reactive(new Matrix(4, 2));
+const matrix1 = reactive(new Matrix(3, 2))
+const matrix2 = reactive(new Matrix(4, 3))
+const matrix3 = reactive(new Matrix(4, 2))
 
 function multiplyMatrices() {
-  matrix3.setMatrix(Matrix.multiplyMatrices(matrix1.matrix, matrix2.matrix));
+  matrix3.setMatrix(Matrix.multiplyMatrices(matrix1.matrix, matrix2.matrix))
 }
 
 watch(matrix2, () => {
-  matrix1.setRowCount(matrix2.colCount);
-  multiplyMatrices();
-});
+  matrix1.setRowCount(matrix2.colCount)
+  multiplyMatrices()
+})
 
 watch(matrix1, () => {
-  matrix2.setColCount(matrix1.rowCount);
-  multiplyMatrices();
-});
+  matrix2.setColCount(matrix1.rowCount)
+  multiplyMatrices()
+})
 </script>
 
 <style scoped>

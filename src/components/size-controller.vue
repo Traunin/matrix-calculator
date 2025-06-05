@@ -18,10 +18,10 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from "vue"
+import { ref, watch } from 'vue'
 
 const props = defineProps<{
-  name: string,
+  name: string
   size: number
 }>()
 
@@ -41,9 +41,9 @@ watch(() => props.size, (val) => {
 })
 
 function isNumber(evt: KeyboardEvent) {
-  const isNumber = /^[0-9]$/i.test(evt.key)
+  const isNumber = /^\d$/.test(evt.key)
   if (!isNumber) {
-    evt.preventDefault();
+    evt.preventDefault()
   }
 }
 
@@ -68,7 +68,7 @@ function blur() {
 }
 
 function emitUpdate() {
-  emit("update", Number(internalSize.value))
+  emit('update', Number(internalSize.value))
 }
 </script>
 

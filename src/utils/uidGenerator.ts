@@ -1,6 +1,6 @@
-let uid = 0;
+let uid = 0
 
 export function uidGet() {
-    uid++;
-    return uid;
+  uid++
+  return uid
 }

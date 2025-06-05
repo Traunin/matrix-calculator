@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { type RouteRecordRaw } from "vue-router";
+import type { RouteRecordRaw } from 'vue-router'
+
 defineProps<{
   route: RouteRecordRaw
 }>()
