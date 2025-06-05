@@ -1,48 +1,46 @@
-import eslint from '@eslint/js'
-// import eslintConfigPrettier from 'eslint-config-prettier'
-import eslintPluginVue from 'eslint-plugin-vue'
-import globals from 'globals'
-import typescriptEslint from 'typescript-eslint'
+import antfu from '@antfu/eslint-config'
 
-export default typescriptEslint.config(
-  { ignores: ['*.d.ts', '**/coverage', '**/dist'] },
-  {
-    extends: [
-      eslint.configs.recommended,
-      ...typescriptEslint.configs.recommended,
-      ...eslintPluginVue.configs['flat/recommended']
-    ],
-    files: ['**/*.{ts,vue}'],
-    languageOptions: {
-      ecmaVersion: 'latest',
-      sourceType: 'module',
-      globals: globals.browser,
-      parserOptions: {
-        parser: typescriptEslint.parser
-      }
-    },
-    rules: {
-      '@typescript-eslint/no-unused-vars': 'warn',
-      'vue/max-attributes-per-line': [
-        'error',
-        {
-          singleline: {
-            max: 1
-          },
-          multiline: {
-            max: 1
-          }
-        }
+export default antfu({
+  rules: {
+    'style/operator-linebreak': ['warn', 'after'],
+    'unicorn/prefer-node-protocol': 'off',
+    'no-unused-vars': 'warn',
+    'prefer-const': 'error',
+    'no-console': 'off',
+    'jsonc/sort-keys': 'off',
+    '@typescript-eslint/no-explicit-any': 'error',
+    'unused-imports/no-unused-imports': 'warn',
+    'perfectionist/sort-imports': ['error', {
+      groups: [
+        'builtin',
+        'external',
+        ['internal', 'internal-type'],
+        ['parent', 'sibling', 'index'],
+
+        'type',
+        ['parent-type', 'sibling-type', 'index-type'],
+
+        'side-effect',
+        'object',
+        'unknown',
       ],
-      'vue/singleline-html-element-content-newline': [
-        'error',
-        {
-          ignoreWhenNoAttributes: false,
-          ignoreWhenEmpty: false,
-          ignores: ['pre', 'textarea']
-        }
-      ]
-    }
-  }
-  // eslintConfigPrettier
-)
+      newlinesBetween: 'ignore',
+      order: 'asc',
+      type: 'natural',
+    }],
+  },
+  vue: {
+    overrides: {
+      'vue/block-order': ['warn', {
+        order: [['template', 'script'], 'style'],
+      }],
+      'vue/custom-event-name-casing': ['error', 'kebab-case'],
+    },
+  },
+  stylistic: {
+    overrides: {
+      'style/brace-style': ['warn', '1tbs'],
+      'style/arrow-parens': 'off',
+    },
+  },
+})
