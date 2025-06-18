@@ -8,6 +8,8 @@
     </button>
     <input
       v-model="internalSize"
+      :name="name"
+      :aria-label="`Set matrix ${name}`"
       @blur="blur"
       @keypress="isNumber($event)"
     >

@@ -20,6 +20,7 @@
     <div class="size-controller">
       <button
         class="open-editor-button"
+        aria-label="Open text editor"
         @click.prevent="openEditor"
       >
         <EditorIcon />

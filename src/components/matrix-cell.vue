@@ -4,6 +4,7 @@
       :id="`cell-${matrixId}-${colIndex}-${rowIndex}`"
       ref="input"
       v-model="displayedValue"
+      :aria-label="`cell-${matrixId}-${colIndex}-${rowIndex}`"
       type="text"
       inputmode="numeric"
       autocomplete="off"
