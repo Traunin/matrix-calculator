@@ -16,12 +16,12 @@ import NavbarDropdown from '@/components/navbar-dropdown.vue'
 
 <style>
 header {
-  display: flex;
+  display: flex !important;
   align-items: center;
   justify-content: space-between;
   background-color: var(--background-color);
   color: var(--text-color);
-  border-bottom: 3px solid var(--text-color);
+  border-bottom: 3px solid var(--text-color) !important;
   flex-wrap: wrap;
 }
 
