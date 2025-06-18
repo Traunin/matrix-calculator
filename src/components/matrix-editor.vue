@@ -13,7 +13,7 @@
         @keypress="isNumberOrSpace($event)"
       />
       <button @click.prevent="closeEditor">
-        Закрыть
+        Close
       </button>
     </div>
 
@@ -27,7 +27,7 @@
       </button>
       <SizeController
         v-if="!matrix.isSquare && userResizable"
-        name="Строки"
+        name="Rows"
         :size="displayedRowCount"
         class="row-controller"
         @update="size => matrix.setRowCount(size)"
@@ -35,7 +35,7 @@
 
       <SizeController
         v-if="userResizable"
-        :name="matrix.isSquare ? `Порядок` : `Столбцы`"
+        :name="matrix.isSquare ? `Size` : `Cols`"
         :size="displayedColCount"
         class="col-controller"
         @update="size => matrix.setColCount(size)"
@@ -56,7 +56,7 @@
             </th>
 
             <th v-if="matrix.isAugmented">
-              Доп.
+              b
             </th>
           </tr>
           <tr

@@ -6,7 +6,7 @@
     />
 
     <button @click.prevent="getSolutions()">
-      Найти корни системы
+      Find roots
     </button>
     <div
       v-if="solutionsFound"

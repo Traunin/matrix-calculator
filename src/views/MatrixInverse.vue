@@ -13,14 +13,14 @@
       </div>
     </div>
     <button @click.prevent="findInverseMatrix">
-      Найти обратную матрицу
+      Find an inverse matrix
     </button>
 
     <div
       v-if="error"
       class="error"
     >
-      Ошибка! Определитель равен нулю.
+      Error! Determinant is 0
     </div>
   </div>
 </template>

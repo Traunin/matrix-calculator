@@ -28,7 +28,7 @@
       </div>
     </div>
     <button @click.prevent="getEigenvector()">
-      Найти собственный вектор/значение
+      Find eigenvector/eigenvalue
     </button>
   </div>
 </template>

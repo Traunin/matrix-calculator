@@ -3,7 +3,7 @@
     <MatrixEditor :matrix="matrix" />
     <div class="determinant">
       <button @click.prevent="calculateDeterminant">
-        Найти определитель
+        Calculate determinant
       </button>
       <div
         v-if="determinantCalculated"

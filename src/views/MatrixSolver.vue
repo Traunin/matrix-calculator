@@ -6,7 +6,7 @@
     />
 
     <button @click.prevent="getSolutions()">
-      Найти корни системы
+      Find roots
     </button>
     <div
       v-if="solutionsFound"
@@ -16,7 +16,7 @@
         v-if="determinant === 0"
         class="error"
       >
-        Ошибка! Определитель равен нулю.
+        Error! Determinant is 0
       </div>
       <div
         v-if="determinant !== 0"
